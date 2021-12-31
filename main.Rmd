@@ -1,0 +1,24 @@
+---
+title: "Health Care Reform and the Number of Doctor Visits - An Econometric Analysis"
+output: 
+  - html_notebook
+  - pdf_document
+---
+```{r message=FALSE}
+library(tidyverse)
+library(dplyr)
+library(ggplot2)
+library(foreign)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Table 1
+
+```{r, child="rmd/table-1.Rmd"}
+```
+
+# Table 2
+
+```{r, child="rmd/table-2.Rmd"}
+```

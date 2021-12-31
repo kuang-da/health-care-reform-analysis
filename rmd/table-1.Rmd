@@ -1,0 +1,99 @@
+```{r}
+knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
+library(ggplot2)
+library(tidyverse)
+library(foreign)
+```
+
+```{r echo = FALSE}
+hcg = read.table("../data/w.data")
+colnames(hcg) = c("id","year", "doctco", "age", "male","educ","married","hsize", "sport", "goodh", "badh", "sozh", "loginc", "ft", "pt", "unemp", "winter", "spring", "fall")
+# id           person - identification number
+# year         calendar year of the observation
+# doctco       number of doctor visits in last three months
+# age          age in years
+# male         male = 1; female = 0
+# educ         years of schooling
+# married      married = 1; otherwise = 0
+# hsize        number of people living in household
+# sport        actively engaged in sports = 1; otherwise = 0
+# goodh        good health (self assessent) = 1; otherwise = 0
+# badh         bad health (self assessent) = 1; otherwise = 0
+# sozh         individual receives welfare payments = 1; otherwise = 0
+# loginc       logarithm of monthly gross income
+# ft	     full time work = 1; otherwise = 0
+# pt	     part time work = 1; otherwise = 0
+# unemp        unemployed = 1; otherwise 0
+# winter       interview in winter quarter = 1; otherwise = 0
+# spring       interview in spring quarter = 1; otherwise = 0
+# fall         interview in fall quarter = 1; otherwise = 0
+dfhcg = data.frame(hcg)
+dfhcg$docvisit = as.integer(as.logical(dfhcg$doctco))
+totaldoc = sum(dfhcg$doctco)
+
+dfhcg_95 = filter(dfhcg, year == 95)
+count_95 = dim(dfhcg_95)[1]
+mdoctco_95 = mean(dfhcg_95$doctco)
+mnovisit_95 = 1 - mean(dfhcg_95$docvisit)
+mage_95 = mean(dfhcg_95$age)
+munemp_95 = mean(dfhcg_95$unemp)
+msport_95 = mean(dfhcg_95$sport)
+mgoodh_95 = mean(dfhcg_95$goodh)
+mbadh_95 = mean(dfhcg_95$badh)
+
+dfhcg_96 = filter(dfhcg, year == 96)
+count_96 = dim(dfhcg_96)[1]
+mdoctco_96 = mean(dfhcg_96$doctco)
+mdoctcogrowth96 = (mdoctco_96- mdoctco_95)/mdoctco_95
+mnovisit_96 = 1 - mean(dfhcg_96$docvisit)
+mage_96 = mean(dfhcg_96$age)
+munemp_96 = mean(dfhcg_96$unemp)
+msport_96 = mean(dfhcg_96$sport)
+mgoodh_96 = mean(dfhcg_96$goodh)
+mbadh_96 = mean(dfhcg_96$badh)
+
+dfhcg_97 = filter(dfhcg, year == 97)
+count_97 = dim(dfhcg_97)[1]
+mdoctco_97 = mean(dfhcg_97$doctco)
+mdoctcogrowth97 = (mdoctco_97- mdoctco_96)/mdoctco_96
+mnovisit_97 = 1 - mean(dfhcg_97$docvisit)
+mage_97 = mean(dfhcg_97$age)
+munemp_97 = mean(dfhcg_97$unemp)
+msport_97 = mean(dfhcg_97$sport)
+mgoodh_97 = mean(dfhcg_97$goodh)
+mbadh_97 = mean(dfhcg_97$badh)
+
+dfhcg_98 = filter(dfhcg, year == 98)
+count_98 = dim(dfhcg_98)[1]
+mdoctco_98 = mean(dfhcg_98$doctco)
+mdoctcogrowth98 = (mdoctco_98- mdoctco_97)/mdoctco_97
+mnovisit_98 = 1 - mean(dfhcg_98$docvisit)
+mage_98 = mean(dfhcg_98$age)
+munemp_98 = mean(dfhcg_98$unemp)
+msport_98 = mean(dfhcg_98$sport)
+mgoodh_98 = mean(dfhcg_98$goodh)
+mbadh_98 = mean(dfhcg_98$badh)
+
+dfhcg_99 = filter(dfhcg, year == 99)
+count_99 = dim(dfhcg_99)[1]
+mdoctco_99 = mean(dfhcg_99$doctco)
+mdoctcogrowth99 = (mdoctco_99- mdoctco_98)/mdoctco_98
+mnovisit_99 = 1 - mean(dfhcg_99$docvisit)
+mage_99 = mean(dfhcg_99$age)
+munemp_99 = mean(dfhcg_99$unemp)
+msport_99 = mean(dfhcg_99$sport)
+mgoodh_99 = mean(dfhcg_99$goodh)
+mbadh_99 = mean(dfhcg_99$badh)
+
+res = c(count_95, mdoctco_95, NA, mnovisit_95, mage_95, munemp_95,msport_95, mgoodh_95 ,mbadh_95,
+           count_96, mdoctco_96, mdoctcogrowth96, mnovisit_96, mage_96, munemp_96, msport_96, mgoodh_96,mbadh_96,
+           count_97, mdoctco_97, mdoctcogrowth97, mnovisit_97, mage_97, munemp_97, msport_97, mgoodh_97,mbadh_97,
+           count_98, mdoctco_98, mdoctcogrowth98,mnovisit_98, mage_98, munemp_98, msport_98, mgoodh_98,mbadh_98,
+           count_99, mdoctco_99, mdoctcogrowth99, mnovisit_99, mage_99, munemp_99, msport_99, mgoodh_99,mbadh_99)
+disp = matrix(data = res, nrow = 9, ncol = 5, byrow = FALSE,
+       dimnames = NULL)
+rownames(disp) = c('Total Observation','No. doctor visits', 'relative change in %', 'No. doctor visits (0/1)', 'Age', 'Unemployed (0/1)', 'Active sport (0/1)', 'Good health (0/1)', 'Bad health (0/1)' )
+colnames(disp) = c('1995', '1996', '1997', '1998', '1999')
+disp
+```
