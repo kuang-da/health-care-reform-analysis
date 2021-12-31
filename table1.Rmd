@@ -100,7 +100,7 @@ msport_99 = mean(dfhcg_99$sport)
 mgoodh_99 = mean(dfhcg_99$goodh)
 mbadh_99 = mean(dfhcg_99$badh)
 
-res = c(count_95, mdoctco_95, NA, mnovisit_95, munemp_95, mage_95,msport_95, mgoodh_95 ,mbadh_95,
+res = c(count_95, mdoctco_95, NA, mnovisit_95, mage_95, munemp_95,msport_95, mgoodh_95 ,mbadh_95,
            count_96, mdoctco_96, mdoctcogrowth96, mnovisit_96, mage_96, munemp_96, msport_96, mgoodh_96,mbadh_96,
            count_97, mdoctco_97, mdoctcogrowth97, mnovisit_97, mage_97, munemp_97, msport_97, mgoodh_97,mbadh_97,
            count_98, mdoctco_98, mdoctcogrowth98,mnovisit_98, mage_98, munemp_98, msport_98, mgoodh_98,mbadh_98,
