@@ -5,6 +5,9 @@ colnames(hcg) = c("id","year", "doctco", "age",
                   "sport", "goodh", "badh", "sozh", 
                   "loginc", "ft", "pt", "unemp", 
                   "winter", "spring", "fall")
+```
+
+```{r}
 emp_vec <- c()
 for (idx in seq(dim(hcg)[1])){
   if(hcg[[idx, 'ft']] == 1)
@@ -19,6 +22,20 @@ for (idx in seq(dim(hcg)[1])){
 ```
 
 ```{r}
+# season_vec <- c()
+# for (idx in seq(dim(hcg)[1])){
+#   if(hcg[[idx, 'winter']] == 1)
+#     season_vec <- c(season_vec, 'winter')
+#   else if (hcg[[idx, 'spring']] == 1)
+#     season_vec <- c(season_vec, 'spring')
+#   else if (hcg[[idx, 'fall']] == 1)
+#     season_vec <- c(season_vec, 'fall')
+#   else
+#     season_vec <- c(season_vec, 'summer')
+# }
+```
+
+```{r}
 data_df <- hcg %>% 
   tibble() %>%
   mutate(age2=age^2) %>%
@@ -27,15 +44,24 @@ data_df <- hcg %>%
   mutate(goodh=factor(goodh)) %>%
   mutate(badh=factor(badh)) %>%
   mutate(emp=factor(emp_vec)) %>%
+  mutate(sozh=factor(sozh)) %>%
   mutate(year=factor(year)) %>%
+  mutate(winter=factor(winter)) %>%
+  mutate(spring=factor(spring)) %>%
+  mutate(fall=factor(fall)) %>%
   select(doctco, age, age2, male, educ, married, hsize, sport, 
-         goodh, badh, emp, loginc, year)
+         goodh, badh, emp, sozh, loginc, year, winter, spring, fall)
 ```
 
 ```{r}
 model_fit <- glm(doctco~age+age2+male+educ+married+hsize
-    +sport+goodh+badh+emp+loginc+year, family = "poisson", data = data_df)
+    +sport+goodh+badh+emp+sozh+loginc+year+winter+ spring+ fall, 
+    family = "poisson", data = data_df)
 
 summary(model_fit)
+```
+
+```{r}
+data_df
 ```
 
