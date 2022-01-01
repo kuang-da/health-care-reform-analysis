@@ -60,11 +60,16 @@ pool_df <- cbind(
   , UL = coef(model_fit) + q_val  * std_err
 )
 ```
+
 ```{r}
 res_df_col1 <- pool_df[seq(2, 16), ]
 rownames(res_df_col1) <- selected_row_names_vec
 res_df_col1
 ```  
+
+```{r}
+logLik(model_fit)
+```
 
 ## Column 2: Panel Poisson Regression with Random Effects
 ```{r}
@@ -85,7 +90,9 @@ res_df_col2 <- cbind(coefficients(summary(model_fit)), confint(model_fit))[seq(2
 rownames(res_df_col2) <- selected_row_names_vec
 res_df_col2
 ```
-
+```{r}
+summary(model_fit)$loglik[1]
+```
 ## Column 3: Panel Poisson Regression with Fixed Effects
 
 ```{r}
@@ -107,3 +114,8 @@ res_df_col3 <- cbind(coefficients(summary(model_fit)), confint(model_fit))[seq(1
 rownames(res_df_col3) <- partial_rowname
 res_df_col3
 ```
+
+```{r}
+summary(model_fit)$loglik[1]
+```
+
