@@ -1,52 +1,33 @@
-```{r}
-hcg <-  read.table("../data/w.data")
+# GLM with fixed effects
+library(pglm)
+library(tidyverse)
+
+hcg <-  read.table("data/w.data")
 colnames(hcg) = c("id","year", "doctco", "age", 
                   "male","educ","married","hsize", 
                   "sport", "goodh", "badh", "sozh", 
                   "loginc", "ft", "pt", "unemp", 
                   "winter", "spring", "fall")
-```
 
-```{r}
 emp_vec <- c()
 for (idx in seq(dim(hcg)[1])){
   if(hcg[[idx, 'ft']] == 1)
-    emp_vec <- c(emp_vec, 'full-time')
+    emp_vec <- c(emp_vec, 'full.time')
   else if (hcg[[idx, 'pt']] == 1)
-    emp_vec <- c(emp_vec, 'part-time')
+    emp_vec <- c(emp_vec, 'part.time')
   else if (hcg[[idx, 'unemp']] == 1)
     emp_vec <- c(emp_vec, 'unemployed')
   else
-    emp_vec <- c(emp_vec, 'self-employed')
+    emp_vec <- c(emp_vec, 'self.employed')
 }
-```
 
-```{r}
 data_df <- hcg %>% 
   tibble() %>%
   mutate(age2=age^2) %>%
   mutate(emp=factor(emp_vec)) %>%
   select(id, doctco, age, age2, male, educ, married, hsize, sport, 
          goodh, badh, emp, sozh, loginc, year, winter, spring, fall)
-data_df
-```
 
-## Column 1
-```{r}
-pglm(doctco~age+age2+factor(male)+educ+factor(married)+hsize+
-       factor(sport)+factor(goodh)+factor(badh)+factor(emp)+factor(sozh)+
-       loginc+
-       factor(year)+
-       factor(winter)+factor(spring)+factor(fall), 
-    model = "pooling",
-    family = "poisson",
-    index=c("id"),
-    data = data_df
-    ) %>% 
-summary()
-```
-## Column 2
-```{r}
 pglm(doctco~age+age2+factor(male)+educ+factor(married)+hsize+factor(sport)+
        factor(goodh)+factor(badh)+factor(emp)+factor(sozh)+
        loginc+factor(year)+factor(winter)+factor(spring)+factor(fall), 
@@ -56,19 +37,3 @@ pglm(doctco~age+age2+factor(male)+educ+factor(married)+hsize+factor(sport)+
     data = data_df
     ) %>% 
 summary()
-```
-
-## Column 3
-
-```{r}
-pglm(doctco~factor(married)+hsize+factor(sport)+
-       factor(goodh)+factor(badh)+factor(emp)+factor(sozh)+
-       loginc+factor(year)+factor(winter)+factor(spring)+factor(fall), 
-    model = "within",
-    family = "poisson",
-    index=c("id"),
-    data = data_df
-    ) %>% 
-summary()
-```
-
