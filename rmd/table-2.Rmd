@@ -33,7 +33,7 @@ data_df <- hcg %>%
   tibble() %>%
   mutate(age2=age^2) %>%
   mutate(emp=factor(emp_vec)) %>%
-  select(id, doctco, age, age2, male, educ, married, hsize, sport, 
+  dplyr::select(id, doctco, age, age2, male, educ, married, hsize, sport, 
          goodh, badh, emp, sozh, loginc, year, winter, spring, fall)
 ```
 
@@ -70,6 +70,11 @@ res_df_col1
 ```{r}
 logLik(model_fit)
 ```
+
+```{r}
+nobs(model_fit)
+```
+
 
 ## Column 2: Panel Poisson Regression with Random Effects
 ```{r}

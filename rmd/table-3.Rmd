@@ -1,0 +1,14 @@
+```{r}
+model_fit <- glm.nb(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+
+    factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall), 
+  data = data_df)
+out <- summary(model_fit)
+```
+
+```{r}
+print(paste0("AIC:", AIC(model_fit)))
+print(paste0("Log Likelihod:", logLik(model_fit)))
+```

@@ -10,6 +10,8 @@ library(dplyr)
 library(ggplot2)
 library(foreign)
 library(pglm)
+library(MASS)
+library(PLNmodels)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -22,4 +24,9 @@ knitr::opts_chunk$set(echo = TRUE)
 # Table 2
 
 ```{r, child="rmd/table-2.Rmd"}
+```
+
+# Table 3
+
+```{r, child="rmd/table-3.Rmd"}
 ```
