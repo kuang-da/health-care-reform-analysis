@@ -5,6 +5,12 @@ colnames(hcg) = c("id","year", "doctco", "age",
                   "sport", "goodh", "badh", "sozh", 
                   "loginc", "ft", "pt", "unemp", 
                   "winter", "spring", "fall")
+
+selected_row_names_vec <- c('Age', 'Age^2', 'Male', 'Education', 'Married', 
+                   'Househould size', 'Active Sport', 
+                   'Good health', 'Bad health', 
+                   'Social assistance', 'Log(income)', 
+                   'Year=1996', 'Year=1997', 'Year=1998', 'Year=1999')
 ```
 
 ```{r}
@@ -21,6 +27,7 @@ for (idx in seq(dim(hcg)[1])){
 }
 ```
 
+
 ```{r}
 data_df <- hcg %>% 
   tibble() %>%
@@ -28,47 +35,75 @@ data_df <- hcg %>%
   mutate(emp=factor(emp_vec)) %>%
   select(id, doctco, age, age2, male, educ, married, hsize, sport, 
          goodh, badh, emp, sozh, loginc, year, winter, spring, fall)
-data_df
 ```
 
-## Column 1
-```{r}
-pglm(doctco~age+age2+factor(male)+educ+factor(married)+hsize+
-       factor(sport)+factor(goodh)+factor(badh)+factor(emp)+factor(sozh)+
-       loginc+
-       factor(year)+
-       factor(winter)+factor(spring)+factor(fall), 
-    model = "pooling",
-    family = "poisson",
-    index=c("id"),
-    data = data_df
-    ) %>% 
-summary()
-```
-## Column 2
-```{r}
-pglm(doctco~age+age2+factor(male)+educ+factor(married)+hsize+factor(sport)+
-       factor(goodh)+factor(badh)+factor(emp)+factor(sozh)+
-       loginc+factor(year)+factor(winter)+factor(spring)+factor(fall), 
-    model = "random",
-    family = "poisson",
-    index=c("id"),
-    data = data_df
-    ) %>% 
-summary()
-```
-
-## Column 3
+## Column 1: Pooled Poisson Regression
 
 ```{r}
-pglm(doctco~factor(married)+hsize+factor(sport)+
-       factor(goodh)+factor(badh)+factor(emp)+factor(sozh)+
-       loginc+factor(year)+factor(winter)+factor(spring)+factor(fall), 
+model_fit <- glm(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+
+    factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall), 
+  family = "poisson", data = data_df)
+
+cov_mat <- vcovHC(model_fit, type = "HC0")
+std_err <- sqrt(diag(cov_mat))
+q_val <- qnorm(0.975)
+
+pool_df <- cbind(
+  Estimate = coef(model_fit)
+  , "Robust SE" = std_err
+  , z = (coef(model_fit)/std_err)
+  , "Pr(>|z|) "= 2 * pnorm(abs(coef(model_fit)/std_err), lower.tail = FALSE)
+  , LL = coef(model_fit) - q_val  * std_err
+  , UL = coef(model_fit) + q_val  * std_err
+)
+```
+```{r}
+res_df_col1 <- pool_df[seq(2, 16), ]
+rownames(res_df_col1) <- selected_row_names_vec
+res_df_col1
+```  
+
+## Column 2: Panel Poisson Regression with Random Effects
+```{r}
+model_fit <- pglm(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+factor(sport)+
+    factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall),
+  model = "random",
+  family = "poisson",
+  index=c("id"),
+  data = data_df
+  )
+```
+
+```{r}
+res_df_col2 <- cbind(coefficients(summary(model_fit)), confint(model_fit))[seq(2, 16), ]
+rownames(res_df_col2) <- selected_row_names_vec
+res_df_col2
+```
+
+## Column 3: Panel Poisson Regression with Fixed Effects
+
+```{r}
+model_fit <- pglm(
+  doctco~factor(married)+hsize+factor(sport)+
+    factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall), 
     model = "within",
     family = "poisson",
     index=c("id"),
     data = data_df
-    ) %>% 
-summary()
+    )
 ```
 
+```{r}
+partial_rowname <- selected_row_names_vec[seq(5, 15)]
+res_df_col3 <- cbind(coefficients(summary(model_fit)), confint(model_fit))[seq(11), ]
+rownames(res_df_col3) <- partial_rowname
+res_df_col3
+```
