@@ -15,18 +15,79 @@ library(PLNmodels)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+# Summary
 
-# Table 1
+# Introduction 
+
+As one of the OECD (The Organization for Economic Co-operation and Development) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes expanding technological and expenditure possibilities in the healthcare services, the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know 1) whether the reform of 1997 is successful and effective and 2) how the effect of reform differs among different groups of the population.  
+
+Some background information needs to be elaborated on before we dig into the analysis. The general aim of this reform is to limit healthcare expenditure and its growth rate. The change in co-payments (for prescription) drugs is the most eminent element of the 1997 reform, with measures like an extended exclusion list of drugs not covered at all by social insurance, price ceilings related to the availability of generics, and a binding overall annual budget for drugs and doctor service. 
+
+An increased co-payment has a direct fiscal effect of reducing the proportion of cost covered by the insurer. The increased out-of-pocket expenses would disincentivize customers from excessive use of prescription drugs and medical resources as a moral hazard. 
+
+The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. The rationale for this approach, other than the unavailability of data on drug use, is the correlation between prescription drug use and doctor visit. The implemented policy will increase the expense of drugs, and the patient might try to persuade the doctor to prescribe in larger size or reduce their drug use while not seeing the doctor. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
+
+# Data
+
+The primary empirical strategy is to pool the data over the five years and estimate the effects of the reforms by comparing the expected number of visits in 1998 and 1996 ceteris paribus, i.e., for an individual with given characteristics. 
+
+The models that will be estimated in the following sections all include a systematic component
+(linear predictor) of the type
+
+\begin{align*}
+x'_{it}\beta 
+=& \beta_0 + \beta_1 \mathrm{age}_{it} + \beta_{2} \mathrm{age}^2_{it} + \beta_3 \mathrm{years~of~education}_{it} + \beta_4 \mathrm{married}_{it} + \beta_5 \mathrm{household ~size}_{it}\\
++& \beta_6 \mathrm{active~sport}_{it} + \beta_7 \mathrm{good~health}_{it}+\beta_8\mathrm{bad~health}_{it}+\beta_9\text{self-employed}_{it}\\
++& \beta_{10}\text{full-time employed}_{it}+\beta_{11}\text{part-time employed}_{it}+\beta_{12}\mathrm{unemployed}\\
++& \beta_{13}\mathrm{equivalent~income}_{it}+\beta_{96}(\mathrm{year=1996})_{it}+\beta_{97}(\mathrm{year=1997})_{it}\\
++& \beta_{98}(\mathrm{year=1998})_{it}+\beta_{99}(\mathrm{year=1999})_{it}
+\end{align*}
+
+The reference year is 1995. In addition, there are three dummies for the quarter in which the
+interview took place (winter, autumn, spring). 
+
+There are three general channels through which these variables can affect the demand for doctor
+visits. The first is the underlying health status, the second the budget constraint, and the third the
+preference formation.
+
+There is no direct health status in the GSOEP. We have the following three sets of proxies instead. Clearly, these are only crude measures of health, and one may want to account for the
+possibility of additional unobserved heterogeneity to capture any remaining health aspects, as well
+as other unobserved influences.
+
+- A time-consistent measure of health over 1995–1999 is
+provided by a subjective self-assessment in response to the question: "How good do you perceive
+your own health at current?", with responses "very good", "good", "fair", "poor" and "very poor".
+The two best responses are classified as 'good health', the two worst responses as 'bad health',
+with fair health being the reference group. 
+- Another proxy for health is the age polynomial. 
+- Finally, engaging in 'active sports' (defined as a weekly or higher frequency) acts as a further proxy for good health, although it might have an additional direct effect on the demand for health services as well. 
+
+The budget constraint is determined by income and prices. The main price variables are the
+opportunity costs of a visit to a doctor which, in turn, depend on education level and employment
+status. 
+
+Several of the variables affect more than one aspect at a time. Age, for instance, matters for
+health, opportunity cost (through the effect of experience on earnings) as well as potentially
+preferences. Similarly, education is an important factor in determining the optimal investment
+in health capital (Grossman, 1972). It is not the goal of this paper to disentangle these various
+transmission channels. Rather, the focus lies on the year dummies, whereas the other right-hand-
+side variables serve as controls for any effects these variables might have on the changes in visits
+over time.
+
+# Econometric Models
+
+# Results
+
+## Table 1
 
 ```{r, child="rmd/table-1.Rmd"}
 ```
-
-# Table 2
+## Table 2
 
 ```{r, child="rmd/table-2.Rmd"}
 ```
 
-# Table 3
+## Table 3
 
 ```{r, child="rmd/table-3.Rmd"}
 ```

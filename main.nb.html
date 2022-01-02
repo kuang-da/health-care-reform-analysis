@@ -251,8 +251,46 @@ knitr::opts_chunk$set(echo = TRUE)</code></pre>
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
-<div id="table-1" class="section level1">
-<h1>Table 1</h1>
+<div id="summary" class="section level1">
+<h1>Summary</h1>
+</div>
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>As one of the OECD (The Organization for Economic Co-operation and Development) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes expanding technological and expenditure possibilities in the healthcare services, the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know 1) whether the reform of 1997 is successful and effective and 2) how the effect of reform differs among different groups of the population.</p>
+<p>Some background information needs to be elaborated on before we dig into the analysis. The general aim of this reform is to limit healthcare expenditure and its growth rate. The change in co-payments (for prescription) drugs is the most eminent element of the 1997 reform, with measures like an extended exclusion list of drugs not covered at all by social insurance, price ceilings related to the availability of generics, and a binding overall annual budget for drugs and doctor service.</p>
+<p>An increased co-payment has a direct fiscal effect of reducing the proportion of cost covered by the insurer. The increased out-of-pocket expenses would disincentivize customers from excessive use of prescription drugs and medical resources as a moral hazard.</p>
+<p>The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. The rationale for this approach, other than the unavailability of data on drug use, is the correlation between prescription drug use and doctor visit. The implemented policy will increase the expense of drugs, and the patient might try to persuade the doctor to prescribe in larger size or reduce their drug use while not seeing the doctor. Though some other effects might affect the number of visits – one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.</p>
+</div>
+<div id="data" class="section level1">
+<h1>Data</h1>
+<p>The primary empirical strategy is to pool the data over the five years and estimate the effects of the reforms by comparing the expected number of visits in 1998 and 1996 ceteris paribus, i.e., for an individual with given characteristics.</p>
+<p>The models that will be estimated in the following sections all include a systematic component (linear predictor) of the type</p>
+<p><span class="math display">\[\begin{align*}
+x&#39;_{it}\beta 
+=&amp; \beta_0 + \beta_1 \mathrm{age}_{it} + \beta_{2} \mathrm{age}^2_{it} + \beta_3 \mathrm{years~of~education}_{it} + \beta_4 \mathrm{married}_{it} + \beta_5 \mathrm{household ~size}_{it}\\
++&amp; \beta_6 \mathrm{active~sport}_{it} + \beta_7 \mathrm{good~health}_{it}+\beta_8\mathrm{bad~health}_{it}+\beta_9\text{self-employed}_{it}\\
++&amp; \beta_{10}\text{full-time employed}_{it}+\beta_{11}\text{part-time employed}_{it}+\beta_{12}\mathrm{unemployed}\\
++&amp; \beta_{13}\mathrm{equivalent~income}_{it}+\beta_{96}(\mathrm{year=1996})_{it}+\beta_{97}(\mathrm{year=1997})_{it}\\
++&amp; \beta_{98}(\mathrm{year=1998})_{it}+\beta_{99}(\mathrm{year=1999})_{it}
+\end{align*}\]</span></p>
+<p>The reference year is 1995. In addition, there are three dummies for the quarter in which the interview took place (winter, autumn, spring).</p>
+<p>There are three general channels through which these variables can affect the demand for doctor visits. The first is the underlying health status, the second the budget constraint, and the third the preference formation.</p>
+<p>There is no direct health status in the GSOEP. We have the following three sets of proxies instead. Clearly, these are only crude measures of health, and one may want to account for the possibility of additional unobserved heterogeneity to capture any remaining health aspects, as well as other unobserved influences.</p>
+<ul>
+<li>A time-consistent measure of health over 1995–1999 is provided by a subjective self-assessment in response to the question: “How good do you perceive your own health at current?”, with responses “very good”, “good”, “fair”, “poor” and “very poor”. The two best responses are classified as ‘good health’, the two worst responses as ‘bad health’, with fair health being the reference group.</li>
+<li>Another proxy for health is the age polynomial.</li>
+<li>Finally, engaging in ‘active sports’ (defined as a weekly or higher frequency) acts as a further proxy for good health, although it might have an additional direct effect on the demand for health services as well.</li>
+</ul>
+<p>The budget constraint is determined by income and prices. The main price variables are the opportunity costs of a visit to a doctor which, in turn, depend on education level and employment status.</p>
+<p>Several of the variables affect more than one aspect at a time. Age, for instance, matters for health, opportunity cost (through the effect of experience on earnings) as well as potentially preferences. Similarly, education is an important factor in determining the optimal investment in health capital (Grossman, 1972). It is not the goal of this paper to disentangle these various transmission channels. Rather, the focus lies on the year dummies, whereas the other right-hand- side variables serve as controls for any effects these variables might have on the changes in visits over time.</p>
+</div>
+<div id="econometric-models" class="section level1">
+<h1>Econometric Models</h1>
+</div>
+<div id="results" class="section level1">
+<h1>Results</h1>
+<div id="table-1" class="section level2">
+<h2>Table 1</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbImtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkiLCJsaWJyYXJ5KGRwbHlyKSIsImxpYnJhcnkoZ2dwbG90MikiLCJsaWJyYXJ5KHRpZHl2ZXJzZSkiLCJsaWJyYXJ5KGZvcmVpZ24pIl19 -->
@@ -291,8 +329,8 @@ Bad health (0/1)        1.291927e-01</code></pre>
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 </div>
-<div id="table-2" class="section level1">
-<h1>Table 2</h1>
+<div id="table-2" class="section level2">
+<h2>Table 2</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbImhjZyA8LSAgcmVhZC50YWJsZShcIi4uL2RhdGEvdy5kYXRhXCIpIiwiY29sbmFtZXMoaGNnKSA9IGMoXCJpZFwiLFwieWVhclwiLCBcImRvY3Rjb1wiLCBcImFnZVwiLCBcbiAgICAgICAgICAgICAgICAgIFwibWFsZVwiLFwiZWR1Y1wiLFwibWFycmllZFwiLFwiaHNpemVcIiwgXG4gICAgICAgICAgICAgICAgICBcInNwb3J0XCIsIFwiZ29vZGhcIiwgXCJiYWRoXCIsIFwic296aFwiLCBcbiAgICAgICAgICAgICAgICAgIFwibG9naW5jXCIsIFwiZnRcIiwgXCJwdFwiLCBcInVuZW1wXCIsIFxuICAgICAgICAgICAgICAgICAgXCJ3aW50ZXJcIiwgXCJzcHJpbmdcIiwgXCJmYWxsXCIpIiwiIiwic2VsZWN0ZWRfcm93X25hbWVzX3ZlYyA8LSBjKCdBZ2UnLCAnQWdlXjInLCAnTWFsZScsICdFZHVjYXRpb24nLCAnTWFycmllZCcsIFxuICAgICAgICAgICAgICAgICAgICdIb3VzZWhvdWxkIHNpemUnLCAnQWN0aXZlIFNwb3J0JywgXG4gICAgICAgICAgICAgICAgICAgJ0dvb2QgaGVhbHRoJywgJ0JhZCBoZWFsdGgnLCBcbiAgICAgICAgICAgICAgICAgICAnU29jaWFsIGFzc2lzdGFuY2UnLCAnTG9nKGluY29tZSknLCBcbiAgICAgICAgICAgICAgICAgICAnWWVhcj0xOTk2JywgJ1llYXI9MTk5NycsICdZZWFyPTE5OTgnLCAnWWVhcj0xOTk5JykiXX0= -->
@@ -340,6 +378,7 @@ for (idx in seq(dim(hcg)[1])){
 <!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
+</div>
 <div id="column-1-pooled-poisson-regression" class="section level2">
 <h2>Column 1: Pooled Poisson Regression</h2>
 <!-- rnb-text-end -->
@@ -568,9 +607,8 @@ Year=1999         -0.05487621</code></pre>
 <!-- rnb-text-end -->
 <!-- rnb-text-begin -->
 </div>
-</div>
-<div id="table-3" class="section level1">
-<h1>Table 3</h1>
+<div id="table-3" class="section level2">
+<h2>Table 3</h2>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
 <!-- rnb-source-begin eyJkYXRhIjpbIm1vZGVsX2ZpdCA8LSBnbG0ubmIoXG4gIGRvY3Rjb35hZ2UrYWdlMitmYWN0b3IobWFsZSkrZWR1YytmYWN0b3IobWFycmllZCkraHNpemUrXG4gICAgZmFjdG9yKHNwb3J0KStmYWN0b3IoZ29vZGgpK2ZhY3RvcihiYWRoKStmYWN0b3Ioc296aCkrXG4gICAgbG9naW5jK2ZhY3Rvcih5ZWFyKStcbiAgICBmYWN0b3IoZW1wKStmYWN0b3Iod2ludGVyKStmYWN0b3Ioc3ByaW5nKStmYWN0b3IoZmFsbCksIFxuICBkYXRhID0gZGF0YV9kZikiLCJvdXQgPC0gc3VtbWFyeShtb2RlbF9maXQpIl19 -->
@@ -600,8 +638,9 @@ out &lt;- summary(model_fit)</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
+</div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiSGVhbHRoIENhcmUgUmVmb3JtIGFuZCB0aGUgTnVtYmVyIG9mIERvY3RvciBWaXNpdHMgLSBBbiBFY29ub21ldHJpYyBBbmFseXNpcyIKb3V0cHV0OiAKICAtIGh0bWxfbm90ZWJvb2sKICAtIHBkZl9kb2N1bWVudAotLS0KYGBge3IgbWVzc2FnZT1GQUxTRX0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShmb3JlaWduKQpsaWJyYXJ5KHBnbG0pCmxpYnJhcnkoTUFTUykKbGlicmFyeShQTE5tb2RlbHMpCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgoKIyBUYWJsZSAxCgpgYGB7ciwgY2hpbGQ9InJtZC90YWJsZS0xLlJtZCJ9CmBgYAoKIyBUYWJsZSAyCgpgYGB7ciwgY2hpbGQ9InJtZC90YWJsZS0yLlJtZCJ9CmBgYAoKIyBUYWJsZSAzCgpgYGB7ciwgY2hpbGQ9InJtZC90YWJsZS0zLlJtZCJ9CmBgYAo=</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiSGVhbHRoIENhcmUgUmVmb3JtIGFuZCB0aGUgTnVtYmVyIG9mIERvY3RvciBWaXNpdHMgLSBBbiBFY29ub21ldHJpYyBBbmFseXNpcyIKb3V0cHV0OiAKICAtIGh0bWxfbm90ZWJvb2sKICAtIHBkZl9kb2N1bWVudAotLS0KYGBge3IgbWVzc2FnZT1GQUxTRX0KbGlicmFyeSh0aWR5dmVyc2UpCmxpYnJhcnkoZHBseXIpCmxpYnJhcnkoZ2dwbG90MikKbGlicmFyeShmb3JlaWduKQpsaWJyYXJ5KHBnbG0pCmxpYnJhcnkoTUFTUykKbGlicmFyeShQTE5tb2RlbHMpCmtuaXRyOjpvcHRzX2NodW5rJHNldChlY2hvID0gVFJVRSkKYGBgCgojIFN1bW1hcnkKCiMgSW50cm9kdWN0aW9uIAoKQXMgb25lIG9mIHRoZSBPRUNEIChUaGUgT3JnYW5pemF0aW9uIGZvciBFY29ub21pYyBDby1vcGVyYXRpb24gYW5kIERldmVsb3BtZW50KSBjb3VudHJpZXMsIEdlcm1hbnkgaGFzIGEgbGFyZ2UgcHVibGljbHkgZnVuZGVkIGhlYWx0aCBzZWN0b3IgdGFraW5nIGEgc3Vic3RhbnRpYWwgcG9ydGlvbiBvZiB0b3RhbCBHRFAuIEEgcG9zc2libGUgZXhwbGFuYXRpb24gZm9yIHRoZSBpbmNyZWFzZSBpbiBoZWFsdGhjYXJlIHNwZW5kaW5nIGluY2x1ZGVzIGV4cGFuZGluZyB0ZWNobm9sb2dpY2FsIGFuZCBleHBlbmRpdHVyZSBwb3NzaWJpbGl0aWVzIGluIHRoZSBoZWFsdGhjYXJlIHNlcnZpY2VzLCB0aGUgc3VyZ2UgaW4gZGVtYW5kIGZyb20gdGhlIGFnaW5nIHBvcHVsYXRpb24sIGFuZCBpbmNlbnRpdmUgc3RydWN0dXJlcyBpbiB0aGUgcHVibGljIGhlYWx0aCBzZWN0b3Igbm90IHByb21vdGluZyB0aGUgZWZmaWNpZW50IHVzZSBvZiByZXNvdXJjZXMuIE9uZSBvZiB0aGUgc2lnbmlmaWNhbnQgcmVmb3JtcyBvbiB0aGUgR2VybWFuIGhlYWx0aGNhcmUgc3lzdGVtIHdhcyB0aGUgcmVmb3JtIG9mIDE5OTcsIGluIHdoaWNoIHRoZSBjby1wYXltZW50cyBmb3IgcHJlc2NyaXB0aW9uIGRydWdzIHdlcmUgcmFpc2VkIGJ5IDIwMCUsIGFuZCB0aGUgcmVpbWJ1cnNlbWVudHMgb2YgcGh5c2ljaWFucyBieSBzdGF0ZSBpbnN1cmFuY2Ugd2VyZSBjYXBwZWQuIFRvIGV2YWx1YXRlIHRoZSBlZmZlY3Qgb2YgdGhlIGhlYWx0aGNhcmUgcmVmb3JtIG9mIDE5OTcsIHdlIHdhbnQgdG8ga25vdyAxKSB3aGV0aGVyIHRoZSByZWZvcm0gb2YgMTk5NyBpcyBzdWNjZXNzZnVsIGFuZCBlZmZlY3RpdmUgYW5kIDIpIGhvdyB0aGUgZWZmZWN0IG9mIHJlZm9ybSBkaWZmZXJzIGFtb25nIGRpZmZlcmVudCBncm91cHMgb2YgdGhlIHBvcHVsYXRpb24uICAKClNvbWUgYmFja2dyb3VuZCBpbmZvcm1hdGlvbiBuZWVkcyB0byBiZSBlbGFib3JhdGVkIG9uIGJlZm9yZSB3ZSBkaWcgaW50byB0aGUgYW5hbHlzaXMuIFRoZSBnZW5lcmFsIGFpbSBvZiB0aGlzIHJlZm9ybSBpcyB0byBsaW1pdCBoZWFsdGhjYXJlIGV4cGVuZGl0dXJlIGFuZCBpdHMgZ3Jvd3RoIHJhdGUuIFRoZSBjaGFuZ2UgaW4gY28tcGF5bWVudHMgKGZvciBwcmVzY3JpcHRpb24pIGRydWdzIGlzIHRoZSBtb3N0IGVtaW5lbnQgZWxlbWVudCBvZiB0aGUgMTk5NyByZWZvcm0sIHdpdGggbWVhc3VyZXMgbGlrZSBhbiBleHRlbmRlZCBleGNsdXNpb24gbGlzdCBvZiBkcnVncyBub3QgY292ZXJlZCBhdCBhbGwgYnkgc29jaWFsIGluc3VyYW5jZSwgcHJpY2UgY2VpbGluZ3MgcmVsYXRlZCB0byB0aGUgYXZhaWxhYmlsaXR5IG9mIGdlbmVyaWNzLCBhbmQgYSBiaW5kaW5nIG92ZXJhbGwgYW5udWFsIGJ1ZGdldCBmb3IgZHJ1Z3MgYW5kIGRvY3RvciBzZXJ2aWNlLiAKCkFuIGluY3JlYXNlZCBjby1wYXltZW50IGhhcyBhIGRpcmVjdCBmaXNjYWwgZWZmZWN0IG9mIHJlZHVjaW5nIHRoZSBwcm9wb3J0aW9uIG9mIGNvc3QgY292ZXJlZCBieSB0aGUgaW5zdXJlci4gVGhlIGluY3JlYXNlZCBvdXQtb2YtcG9ja2V0IGV4cGVuc2VzIHdvdWxkIGRpc2luY2VudGl2aXplIGN1c3RvbWVycyBmcm9tIGV4Y2Vzc2l2ZSB1c2Ugb2YgcHJlc2NyaXB0aW9uIGRydWdzIGFuZCBtZWRpY2FsIHJlc291cmNlcyBhcyBhIG1vcmFsIGhhemFyZC4gCgpUaGUgYW5hbHlzaXMgb2YgdGhpcyBwYXBlciBmb2N1c2VzIG9uIHRoZSBkaXNpbmNlbnRpdml6aW5nIGVmZmVjdCBvbiBwcmVzY3JpcHRpb24gZHJ1ZyB1c2UgYnkgdHJhY2tpbmcgdGhlIG51bWJlciBvZiBkb2N0b3IgdmlzaXRzIGJ5IGEgcGVyc29uIGR1cmluZyBhIGdpdmVuIHRpbWUuIFRoZSByYXRpb25hbGUgZm9yIHRoaXMgYXBwcm9hY2gsIG90aGVyIHRoYW4gdGhlIHVuYXZhaWxhYmlsaXR5IG9mIGRhdGEgb24gZHJ1ZyB1c2UsIGlzIHRoZSBjb3JyZWxhdGlvbiBiZXR3ZWVuIHByZXNjcmlwdGlvbiBkcnVnIHVzZSBhbmQgZG9jdG9yIHZpc2l0LiBUaGUgaW1wbGVtZW50ZWQgcG9saWN5IHdpbGwgaW5jcmVhc2UgdGhlIGV4cGVuc2Ugb2YgZHJ1Z3MsIGFuZCB0aGUgcGF0aWVudCBtaWdodCB0cnkgdG8gcGVyc3VhZGUgdGhlIGRvY3RvciB0byBwcmVzY3JpYmUgaW4gbGFyZ2VyIHNpemUgb3IgcmVkdWNlIHRoZWlyIGRydWcgdXNlIHdoaWxlIG5vdCBzZWVpbmcgdGhlIGRvY3Rvci4gVGhvdWdoIHNvbWUgb3RoZXIgZWZmZWN0cyBtaWdodCBhZmZlY3QgdGhlIG51bWJlciBvZiB2aXNpdHMgLS0gb25lIG1pZ2h0IHN0aWxsIHNlZSBhIGRvY3RvciBmb3IgZGlhZ25vc2lzIG9yIGFkdmljZSBvbiBub24tcHJlc2NyaXB0aW9uIGRydWdzLCB0aGUgbnVtYmVyIG9mIHN1Y2ggdmlzaXRzIHdvdWxkIG5vdCBiZSBhZmZlY3RlZCBieSB0aGUgaW5jcmVhc2VkIGNvLXBheW1lbnQuIFRodXMsIGFuIGFuYWx5c2lzIG9mIHBhdGllbnQgdmlzaXRzIGNvdWxkIGhlbHAgdXMgZ2V0IHNvbWUgaW5zaWdodHMgaW50byB0aGUgZWZmZWN0aXZlbmVzcyBhbmQgc3VjY2VzcyBvZiB0aGUgMTk5NyBIZWFsdGhjYXJlIHJlZm9ybS4KCiMgRGF0YQoKVGhlIHByaW1hcnkgZW1waXJpY2FsIHN0cmF0ZWd5IGlzIHRvIHBvb2wgdGhlIGRhdGEgb3ZlciB0aGUgZml2ZSB5ZWFycyBhbmQgZXN0aW1hdGUgdGhlIGVmZmVjdHMgb2YgdGhlIHJlZm9ybXMgYnkgY29tcGFyaW5nIHRoZSBleHBlY3RlZCBudW1iZXIgb2YgdmlzaXRzIGluIDE5OTggYW5kIDE5OTYgY2V0ZXJpcyBwYXJpYnVzLCBpLmUuLCBmb3IgYW4gaW5kaXZpZHVhbCB3aXRoIGdpdmVuIGNoYXJhY3RlcmlzdGljcy4gCgpUaGUgbW9kZWxzIHRoYXQgd2lsbCBiZSBlc3RpbWF0ZWQgaW4gdGhlIGZvbGxvd2luZyBzZWN0aW9ucyBhbGwgaW5jbHVkZSBhIHN5c3RlbWF0aWMgY29tcG9uZW50CihsaW5lYXIgcHJlZGljdG9yKSBvZiB0aGUgdHlwZQoKXGJlZ2lue2FsaWduKn0KeCdfe2l0fVxiZXRhIAo9JiBcYmV0YV8wICsgXGJldGFfMSBcbWF0aHJte2FnZX1fe2l0fSArIFxiZXRhX3syfSBcbWF0aHJte2FnZX1eMl97aXR9ICsgXGJldGFfMyBcbWF0aHJte3llYXJzfm9mfmVkdWNhdGlvbn1fe2l0fSArIFxiZXRhXzQgXG1hdGhybXttYXJyaWVkfV97aXR9ICsgXGJldGFfNSBcbWF0aHJte2hvdXNlaG9sZCB+c2l6ZX1fe2l0fVxcCismIFxiZXRhXzYgXG1hdGhybXthY3RpdmV+c3BvcnR9X3tpdH0gKyBcYmV0YV83IFxtYXRocm17Z29vZH5oZWFsdGh9X3tpdH0rXGJldGFfOFxtYXRocm17YmFkfmhlYWx0aH1fe2l0fStcYmV0YV85XHRleHR7c2VsZi1lbXBsb3llZH1fe2l0fVxcCismIFxiZXRhX3sxMH1cdGV4dHtmdWxsLXRpbWUgZW1wbG95ZWR9X3tpdH0rXGJldGFfezExfVx0ZXh0e3BhcnQtdGltZSBlbXBsb3llZH1fe2l0fStcYmV0YV97MTJ9XG1hdGhybXt1bmVtcGxveWVkfVxcCismIFxiZXRhX3sxM31cbWF0aHJte2VxdWl2YWxlbnR+aW5jb21lfV97aXR9K1xiZXRhX3s5Nn0oXG1hdGhybXt5ZWFyPTE5OTZ9KV97aXR9K1xiZXRhX3s5N30oXG1hdGhybXt5ZWFyPTE5OTd9KV97aXR9XFwKKyYgXGJldGFfezk4fShcbWF0aHJte3llYXI9MTk5OH0pX3tpdH0rXGJldGFfezk5fShcbWF0aHJte3llYXI9MTk5OX0pX3tpdH0KXGVuZHthbGlnbip9CgpUaGUgcmVmZXJlbmNlIHllYXIgaXMgMTk5NS4gSW4gYWRkaXRpb24sIHRoZXJlIGFyZSB0aHJlZSBkdW1taWVzIGZvciB0aGUgcXVhcnRlciBpbiB3aGljaCB0aGUKaW50ZXJ2aWV3IHRvb2sgcGxhY2UgKHdpbnRlciwgYXV0dW1uLCBzcHJpbmcpLiAKClRoZXJlIGFyZSB0aHJlZSBnZW5lcmFsIGNoYW5uZWxzIHRocm91Z2ggd2hpY2ggdGhlc2UgdmFyaWFibGVzIGNhbiBhZmZlY3QgdGhlIGRlbWFuZCBmb3IgZG9jdG9yCnZpc2l0cy4gVGhlIGZpcnN0IGlzIHRoZSB1bmRlcmx5aW5nIGhlYWx0aCBzdGF0dXMsIHRoZSBzZWNvbmQgdGhlIGJ1ZGdldCBjb25zdHJhaW50LCBhbmQgdGhlIHRoaXJkIHRoZQpwcmVmZXJlbmNlIGZvcm1hdGlvbi4KClRoZXJlIGlzIG5vIGRpcmVjdCBoZWFsdGggc3RhdHVzIGluIHRoZSBHU09FUC4gV2UgaGF2ZSB0aGUgZm9sbG93aW5nIHRocmVlIHNldHMgb2YgcHJveGllcyBpbnN0ZWFkLiBDbGVhcmx5LCB0aGVzZSBhcmUgb25seSBjcnVkZSBtZWFzdXJlcyBvZiBoZWFsdGgsIGFuZCBvbmUgbWF5IHdhbnQgdG8gYWNjb3VudCBmb3IgdGhlCnBvc3NpYmlsaXR5IG9mIGFkZGl0aW9uYWwgdW5vYnNlcnZlZCBoZXRlcm9nZW5laXR5IHRvIGNhcHR1cmUgYW55IHJlbWFpbmluZyBoZWFsdGggYXNwZWN0cywgYXMgd2VsbAphcyBvdGhlciB1bm9ic2VydmVkIGluZmx1ZW5jZXMuCgotIEEgdGltZS1jb25zaXN0ZW50IG1lYXN1cmUgb2YgaGVhbHRoIG92ZXIgMTk5NeKAkzE5OTkgaXMKcHJvdmlkZWQgYnkgYSBzdWJqZWN0aXZlIHNlbGYtYXNzZXNzbWVudCBpbiByZXNwb25zZSB0byB0aGUgcXVlc3Rpb246ICJIb3cgZ29vZCBkbyB5b3UgcGVyY2VpdmUKeW91ciBvd24gaGVhbHRoIGF0IGN1cnJlbnQ/Iiwgd2l0aCByZXNwb25zZXMgInZlcnkgZ29vZCIsICJnb29kIiwgImZhaXIiLCAicG9vciIgYW5kICJ2ZXJ5IHBvb3IiLgpUaGUgdHdvIGJlc3QgcmVzcG9uc2VzIGFyZSBjbGFzc2lmaWVkIGFzICdnb29kIGhlYWx0aCcsIHRoZSB0d28gd29yc3QgcmVzcG9uc2VzIGFzICdiYWQgaGVhbHRoJywKd2l0aCBmYWlyIGhlYWx0aCBiZWluZyB0aGUgcmVmZXJlbmNlIGdyb3VwLiAKLSBBbm90aGVyIHByb3h5IGZvciBoZWFsdGggaXMgdGhlIGFnZSBwb2x5bm9taWFsLiAKLSBGaW5hbGx5LCBlbmdhZ2luZyBpbiAnYWN0aXZlIHNwb3J0cycgKGRlZmluZWQgYXMgYSB3ZWVrbHkgb3IgaGlnaGVyIGZyZXF1ZW5jeSkgYWN0cyBhcyBhIGZ1cnRoZXIgcHJveHkgZm9yIGdvb2QgaGVhbHRoLCBhbHRob3VnaCBpdCBtaWdodCBoYXZlIGFuIGFkZGl0aW9uYWwgZGlyZWN0IGVmZmVjdCBvbiB0aGUgZGVtYW5kIGZvciBoZWFsdGggc2VydmljZXMgYXMgd2VsbC4gCgpUaGUgYnVkZ2V0IGNvbnN0cmFpbnQgaXMgZGV0ZXJtaW5lZCBieSBpbmNvbWUgYW5kIHByaWNlcy4gVGhlIG1haW4gcHJpY2UgdmFyaWFibGVzIGFyZSB0aGUKb3Bwb3J0dW5pdHkgY29zdHMgb2YgYSB2aXNpdCB0byBhIGRvY3RvciB3aGljaCwgaW4gdHVybiwgZGVwZW5kIG9uIGVkdWNhdGlvbiBsZXZlbCBhbmQgZW1wbG95bWVudApzdGF0dXMuIAoKU2V2ZXJhbCBvZiB0aGUgdmFyaWFibGVzIGFmZmVjdCBtb3JlIHRoYW4gb25lIGFzcGVjdCBhdCBhIHRpbWUuIEFnZSwgZm9yIGluc3RhbmNlLCBtYXR0ZXJzIGZvcgpoZWFsdGgsIG9wcG9ydHVuaXR5IGNvc3QgKHRocm91Z2ggdGhlIGVmZmVjdCBvZiBleHBlcmllbmNlIG9uIGVhcm5pbmdzKSBhcyB3ZWxsIGFzIHBvdGVudGlhbGx5CnByZWZlcmVuY2VzLiBTaW1pbGFybHksIGVkdWNhdGlvbiBpcyBhbiBpbXBvcnRhbnQgZmFjdG9yIGluIGRldGVybWluaW5nIHRoZSBvcHRpbWFsIGludmVzdG1lbnQKaW4gaGVhbHRoIGNhcGl0YWwgKEdyb3NzbWFuLCAxOTcyKS4gSXQgaXMgbm90IHRoZSBnb2FsIG9mIHRoaXMgcGFwZXIgdG8gZGlzZW50YW5nbGUgdGhlc2UgdmFyaW91cwp0cmFuc21pc3Npb24gY2hhbm5lbHMuIFJhdGhlciwgdGhlIGZvY3VzIGxpZXMgb24gdGhlIHllYXIgZHVtbWllcywgd2hlcmVhcyB0aGUgb3RoZXIgcmlnaHQtaGFuZC0Kc2lkZSB2YXJpYWJsZXMgc2VydmUgYXMgY29udHJvbHMgZm9yIGFueSBlZmZlY3RzIHRoZXNlIHZhcmlhYmxlcyBtaWdodCBoYXZlIG9uIHRoZSBjaGFuZ2VzIGluIHZpc2l0cwpvdmVyIHRpbWUuCgojIEVjb25vbWV0cmljIE1vZGVscwoKIyBSZXN1bHRzCgojIyBUYWJsZSAxCgpgYGB7ciwgY2hpbGQ9InJtZC90YWJsZS0xLlJtZCJ9CmBgYAojIyBUYWJsZSAyCgpgYGB7ciwgY2hpbGQ9InJtZC90YWJsZS0yLlJtZCJ9CmBgYAoKIyMgVGFibGUgMwoKYGBge3IsIGNoaWxkPSJybWQvdGFibGUtMy5SbWQifQpgYGAK</div>
 
 
 
