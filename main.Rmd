@@ -74,7 +74,23 @@ transmission channels. Rather, the focus lies on the year dummies, whereas the o
 side variables serve as controls for any effects these variables might have on the changes in visits
 over time.
 
-# Econometric Models
+# Econometric Models for consideration
+We consider the following few models
+
+## Poisson Model
+We take the Poisson distribution as the standard probability distribution for count data
+$P(y_i|\lambda_i)=\frac{\exp(-\lambda_i) \cdot \lambda_{i}^{y_{i}}}{y_{i}!}$ s.t
+$\mathrm{E}\left(y_{i} \mid \lambda_{i}\right)=\operatorname{Var}\left(y_{i} \mid \lambda_{i}\right)=\lambda_{i}$
+We assume heterogeneous population with covariates $x_i$ in regression,$\lambda_{i}=\exp (x_{i}^{T} \beta)$, $y = (y_1,...y_N)^{T}$, $x = (x_1,...x_N)^{T}$. The data was ramdomly sampled $P(y \mid x)=\exp \left[-\sum_{i=1}^{N} \exp \left(x_{i}^{\prime} \beta\right)\right] \prod_{i=1}^{N} \frac{\left[\exp \left(x_{i}^{\prime} \beta\right)\right]^{y_{i}}}{y_{i} !}$, and we look for MLE.
+The relative changeh in expected doctor visits as reform effects can be calculated with $\Delta \%_{(98,96)} = 100 [\frac{\mathrm{E}(y_{i, 98} | x)}{\mathrm{E}(y_{i, 96} | x )}-1] =100[\exp (\beta_{98}-\beta_{96})-1]$
+It should be noted that the Poisson Model has a few shortcomings:
+
+1. The assumption exclude the case of unobserved hetrogeneity
+
+2. It ignore the Panel Strcture of the data and the Standard Errors need to incorporate possible serial correlation (unless we can assume constant individual effect over time)
+
+3. The single index structure of the Poisson Regression model implies that the distribution is detemined w.r.t the given mean, and we cannot evaluate the effect of the reform over the distribution (i.e cannot how it affect diffent sections of the population)
+
 
 # Results
 
