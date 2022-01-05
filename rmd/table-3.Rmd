@@ -1,14 +1,48 @@
 ```{r}
-model_fit <- glm.nb(
+model_fit_pos<- glm.nb(
   doctco~age+age2+factor(male)+educ+factor(married)+hsize+
     factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
     loginc+factor(year)+
     factor(emp)+factor(winter)+factor(spring)+factor(fall), 
   data = data_df)
-out <- summary(model_fit)
+out <- summary(model_fit_pos)
 ```
 
 ```{r}
-print(paste0("AIC:", AIC(model_fit)))
-print(paste0("Log Likelihod:", logLik(model_fit)))
+print(paste0("AIC:", AIC(model_fit_pos)))
+print(paste0("Log Likelihod:", logLik(model_fit_pos)))
+```
+
+```{r}
+model_fit_negbin <- MASS::glm.nb(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+
+    factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall), 
+  data = data_df)
+summary(model_fit_negbin)
+```
+
+```{r}
+print(paste0("AIC:", AIC(model_fit_negbin)))
+print(paste0("Log Likelihod:", logLik(model_fit_negbin)))
+```
+```{r}
+hurdle_negbin <- hurdle(
+  formula = doctco~age+age2+factor(male)+educ+factor(married)+hsize+ factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+ loginc+factor(year)+ factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "negbin")
+
+summary(hurdle_negbin)
+
+```
+```{r}
+print(paste0("AIC:", AIC(hurdle_negbin)))
+print(paste0("Log Likelihod:", logLik(hurdle_negbin)))
+```
+
+```{r}
+hurdle_probit_poisson_lognormal = hurdle(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+loginc+factor(year)+factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "poisson", zero.dist = "binomial", link = "probit")
+summary(hurdle_probit_poisson_lognormal)
+print(paste0("AIC:", AIC(hurdle_probit_poisson_lognormal)))
+print(paste0("Log Likelihod:", logLik(hurdle_probit_poisson_lognormal)))
 ```

@@ -4,6 +4,7 @@ output:
   - html_notebook
   - pdf_document
 ---
+
 ```{r message=FALSE}
 library(tidyverse)
 library(dplyr)
@@ -12,6 +13,7 @@ library(foreign)
 library(pglm)
 library(MASS)
 library(PLNmodels)
+library(pscl)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -91,7 +93,18 @@ It should be noted that the Poisson Model has a few shortcomings:
 
 3. The single index structure of the Poisson Regression model implies that the distribution is detemined w.r.t the given mean, and we cannot evaluate the effect of the reform over the distribution (i.e cannot how it affect diffent sections of the population)
 
-
+## Hurdle Models
+Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - min(1,y)$, the probability function of the hurdle model is $f\left(y_{i}\right)=f_{1 i}^{d_{i}}\left[\left(1-f_{1 i}\right) f_{T}\left(y_{i} \mid y_{i}>0\right)\right]^{1-d_{i}}$, with $f_{1i} = P(d_i = 1)$, $f_T(y_i|y_i>0) =  \frac{f_2 (y_i)}{1-f_{2i}(0)}$.
+For $f_1$, we have the following hurdle functions as candidates
+1. Poisson: $exp(-exp(x_{i}^{T}\gamma))$
+2. Negative Bionomial, Type 1: $(1+\theta)^{-exp(x_{i}^{T}\theta)/\theta}$
+3. Negative Bionomial, Type 2: $[\alpha/(exp(x_{i}^{T}\alpha)+\alpha)^\alpha]$
+4. Logit: $\frac{exp(x_{i}^{T}\gamma)}{1+exp(x_{i}^{T}\gamma)}$
+5. Probit: $\Theta(x_{i}^{T}\gamma)$
+For $f_2$, we have
+1. Poisson
+2. Negative Binomial
+3. Poisson-log-normal $p(x) = (exp(x*\mu + x^2 * \sigma/2)*(2*\pi*\sigma)^{-1/2})/x! * g(y)$
 # Results
 
 ## Table 1
