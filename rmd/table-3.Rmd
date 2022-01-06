@@ -9,7 +9,9 @@ summary(model_fit_pos)
 ```
 
 ```{r}
+# Adding BIC as an alternative measurement 
 print(paste0("AIC:", AIC(model_fit_pos)))
+print(paste0("BIC:", BIC(model_fit_pos)))
 print(paste0("Log Likelihod:", logLik(model_fit_pos)))
 ```
 
@@ -25,6 +27,7 @@ summary(model_fit_negbin)
 
 ```{r}
 print(paste0("AIC:", AIC(model_fit_negbin)))
+print(paste0("BIC:", BIC(model_fit_negbin)))
 print(paste0("Log Likelihod:", logLik(model_fit_negbin)))
 ```
 ```{r}
@@ -56,7 +59,7 @@ print(paste0("Log Likelihod:", logLik(hurdle_probit_poisson_lognormal)))
 ```
 
 ```{r}
-
+# Try to create subdata based on there relative position in 1996 (mean, or quartiles works)
 sep = mean(data_df$doctco[data_df$year == 96])
 df_96 = data_df[data_df$year == 96,]
 sep = mean(df_96$doctco)
