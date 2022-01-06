@@ -1,11 +1,11 @@
 ```{r}
-model_fit_pos<- glm.nb(
+model_fit_pos<- glm(
   doctco~age+age2+factor(male)+educ+factor(married)+hsize+
     factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
     loginc+factor(year)+
     factor(emp)+factor(winter)+factor(spring)+factor(fall), 
-  data = data_df)
-out <- summary(model_fit_pos)
+  data = data_df, family = poisson)
+summary(model_fit_pos)
 ```
 
 ```{r}
@@ -28,11 +28,19 @@ print(paste0("AIC:", AIC(model_fit_negbin)))
 print(paste0("Log Likelihod:", logLik(model_fit_negbin)))
 ```
 ```{r}
+model_zeroinf_negbin = zeroinfl(formula = doctco~age+age2+factor(male)+educ+factor(married)+hsize+ factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+ loginc+factor(year)+ factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "negbin")
+
+summary(model_zeroinf_negbin)
+
+print(paste0("AIC:", AIC(model_zeroinf_negbin)))
+print(paste0("Log Likelihod:", logLik(model_zeroinf_negbin)))
+
+```
+
+```{r}
 hurdle_negbin <- hurdle(
   formula = doctco~age+age2+factor(male)+educ+factor(married)+hsize+ factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+ loginc+factor(year)+ factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "negbin")
-
 summary(hurdle_negbin)
-
 ```
 ```{r}
 print(paste0("AIC:", AIC(hurdle_negbin)))
@@ -45,4 +53,41 @@ hurdle_probit_poisson_lognormal = hurdle(
 summary(hurdle_probit_poisson_lognormal)
 print(paste0("AIC:", AIC(hurdle_probit_poisson_lognormal)))
 print(paste0("Log Likelihod:", logLik(hurdle_probit_poisson_lognormal)))
+```
+
+```{r}
+
+sep = mean(data_df$doctco[data_df$year == 96])
+df_96 = data_df[data_df$year == 96,]
+sep = mean(df_96$doctco)
+sep
+df_98 = data_df[data_df$year == 98,]
+sep2 = mean(df_98$doctco)
+
+
+lower_index = subset(data_df$id, data_df$doctco < sep|data_df$year == 96)
+lower_index
+upper_index = subset(data_df$id, data_df$id[data_df$year == 96]> sep)
+lower_index
+hcg_df1 = subset(data_df, data_df$doctco[data_df$year == 96] < sep)
+model_fit_negbin1 <- MASS::glm.nb(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+
+    factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall), 
+  data = hcg_df1)
+summary(model_fit_negbin1)
+print(paste0("AIC:", AIC(model_fit_negbin1)))
+print(paste0("Log Likelihod:", logLik(model_fit_negbin1)))
+
+hcg_df2 = subset(data_df, data_df$doctco > sep)
+model_fit_negbin2 <- MASS::glm.nb(
+  doctco~age+age2+factor(male)+educ+factor(married)+hsize+
+    factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
+    loginc+factor(year)+
+    factor(emp)+factor(winter)+factor(spring)+factor(fall), 
+  data = hcg_df2)
+summary(model_fit_negbin2)
+print(paste0("AIC:", AIC(model_fit_negbin2)))
+print(paste0("Log Likelihod:", logLik(model_fit_negbin2)))
 ```

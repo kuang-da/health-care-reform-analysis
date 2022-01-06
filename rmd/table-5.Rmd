@@ -1,0 +1,22 @@
+For 
+```{r}
+sprintf("From the Poisson Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(model_fit_pos)[15]-coef(model_fit_pos)[13])-1))
+```
+
+```{r}
+sprintf("From the Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(model_fit_negbin)[15]-coef(model_fit_negbin)[13])-1))
+
+```
+```{r}
+sprintf("From the Zero Inflation Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(model_zeroinf_negbin)[15]-coef(model_zeroinf_negbin)[13])-1))
+```
+
+```{r}
+sprintf("From the Hurdle Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(hurdle_negbin)[15]-coef(hurdle_negbin)[13])-1))
+```
+
+```{r}
+sprintf("From the Two Component Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 for less frequent group is %s%%", 100*(exp(coef(model_fit_negbin1)[15]-coef(model_fit_negbin1)[13])-1))
+sprintf("From the Two Component Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 for more frequent group is %s%%", 100*(exp(coef(model_fit_negbin2)[15]-coef(model_fit_negbin2)[13])-1))
+```
+By dividing the visitors two groups at mean visit times, we can see that the previously less frequent visit groups h
