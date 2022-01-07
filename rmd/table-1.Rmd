@@ -97,3 +97,8 @@ rownames(disp) = c('Total Observation','No. doctor visits', 'relative change in 
 colnames(disp) = c('1995', '1996', '1997', '1998', '1999')
 disp
 ```
+
+```{r}
+write.csv(disp, "../out/table-1.csv")
+```
+

@@ -1,11 +1,10 @@
 ---
 title: "Health Care Reform and the Number of Doctor Visits - An Econometric Analysis"
 output: 
-  - html_notebook
   - pdf_document
 ---
 
-```{r message=FALSE}
+```{r message=FALSE, echo = FALSE}
 library(tidyverse)
 library(dplyr)
 library(ggplot2)
@@ -14,6 +13,8 @@ library(pglm)
 library(MASS)
 library(PLNmodels)
 library(pscl)
+library(knitr)
+library(kableExtra)
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
@@ -25,7 +26,7 @@ As one of the OECD (The Organization for Economic Co-operation and Development) 
 
 Some background information needs to be elaborated on before we dig into the analysis. The general aim of this reform is to limit healthcare expenditure and its growth rate. The change in co-payments (for prescription) drugs is the most eminent element of the 1997 reform, with measures like an extended exclusion list of drugs not covered at all by social insurance, price ceilings related to the availability of generics, and a binding overall annual budget for drugs and doctor service. 
 
-An increased co-payment has a direct fiscal effect of reducing the proportion of cost covered by the insurer. The increased out-of-pocket expenses would disincentivize customers from excessive use of prescription drugs and medical resources as a moral hazard. 
+An increased co-payment has a direct fiscal effect of reducing the proportion of cost covered by the insurer. The increased out-of-pocket expenses would disincentive customers from excessive use of prescription drugs and medical resources as a moral hazard. 
 
 The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. The rationale for this approach, other than the unavailability of data on drug use, is the correlation between prescription drug use and doctor visit. The implemented policy will increase the expense of drugs, and the patient might try to persuade the doctor to prescribe in larger size or reduce their drug use while not seeing the doctor. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
 
@@ -79,44 +80,103 @@ over time.
 # Econometric Models for consideration
 We consider the following few models
 
-## Poisson Model
+## Poisson Regression Model
 We take the Poisson distribution as the standard probability distribution for count data
 $P(y_i|\lambda_i)=\frac{\exp(-\lambda_i) \cdot \lambda_{i}^{y_{i}}}{y_{i}!}$ s.t
 $\mathrm{E}\left(y_{i} \mid \lambda_{i}\right)=\operatorname{Var}\left(y_{i} \mid \lambda_{i}\right)=\lambda_{i}$
-We assume heterogeneous population with covariates $x_i$ in regression,$\lambda_{i}=\exp (x_{i}^{T} \beta)$, $y = (y_1,...y_N)^{T}$, $x = (x_1,...x_N)^{T}$. The data was ramdomly sampled $P(y \mid x)=\exp \left[-\sum_{i=1}^{N} \exp \left(x_{i}^{\prime} \beta\right)\right] \prod_{i=1}^{N} \frac{\left[\exp \left(x_{i}^{\prime} \beta\right)\right]^{y_{i}}}{y_{i} !}$, and we look for MLE.
-The relative changeh in expected doctor visits as reform effects can be calculated with $\Delta \%_{(98,96)} = 100 [\frac{\mathrm{E}(y_{i, 98} | x)}{\mathrm{E}(y_{i, 96} | x )}-1] =100[\exp (\beta_{98}-\beta_{96})-1]$
+We assume heterogeneous population with covariance $x_i$ in regression,$\lambda_{i}=\exp (x_{i}^{T} \beta)$, $y = (y_1,...y_N)^{T}$, $x = (x_1,...x_N)^{T}$. The data was randomly sampled $P(y \mid x)=\exp \left[-\sum_{i=1}^{N} \exp \left(x_{i}^{\prime} \beta\right)\right] \prod_{i=1}^{N} \frac{\left[\exp \left(x_{i}^{\prime} \beta\right)\right]^{y_{i}}}{y_{i} !}$, and we look for MLE.
+The relative change in expected doctor visits as reform effects can be calculated with $\Delta \%_{(98,96)} = 100 [\frac{\mathrm{E}(y_{i, 98} | x)}{\mathrm{E}(y_{i, 96} | x )}-1] =100[\exp (\beta_{98}-\beta_{96})-1]$
 It should be noted that the Poisson Model has a few shortcomings:
 
-1. The assumption exclude the case of unobserved hetrogeneity
+1. The assumption exclude the case of unobserved heterogeneity
 
-2. It ignore the Panel Strcture of the data and the Standard Errors need to incorporate possible serial correlation (unless we can assume constant individual effect over time)
+2. It ignore the Panel Structure of the data and the Standard Errors need to incorporate possible serial correlation (unless we can assume constant individual effect over time)
 
-3. The single index structure of the Poisson Regression model implies that the distribution is detemined w.r.t the given mean, and we cannot evaluate the effect of the reform over the distribution (i.e cannot how it affect diffent sections of the population)
+3. The single index structure of the Poisson Regression model implies that the distribution is determined w.r.t the given mean, and we cannot evaluate the effect of the reform over the distribution (i.e cannot how it affect different sections of the population)
 
 ## Hurdle Models
-Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - min(1,y)$, the probability function of the hurdle model is $f\left(y_{i}\right)=f_{1 i}^{d_{i}}\left[\left(1-f_{1 i}\right) f_{T}\left(y_{i} \mid y_{i}>0\right)\right]^{1-d_{i}}$, with $f_{1i} = P(d_i = 1)$, $f_T(y_i|y_i>0) =  \frac{f_2 (y_i)}{1-f_{2i}(0)}$.
+Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - \mathrm{min}(1,y)$, the probability function of the hurdle model is $f\left(y_{i}\right)=f_{1 i}^{d_{i}}\left[\left(1-f_{1 i}\right) f_{T}\left(y_{i} \mid y_{i}>0\right)\right]^{1-d_{i}}$, with $f_{1i} = P(d_i = 1)$, $f_T(y_i|y_i>0) =  \frac{f_2 (y_i)}{1-f_{2i}(0)}$.
+
 For $f_1$, we have the following hurdle functions as candidates
-1. Poisson: $exp(-exp(x_{i}^{T}\gamma))$
-2. Negative Bionomial, Type 1: $(1+\theta)^{-exp(x_{i}^{T}\theta)/\theta}$
-3. Negative Bionomial, Type 2: $[\alpha/(exp(x_{i}^{T}\alpha)+\alpha)^\alpha]$
-4. Logit: $\frac{exp(x_{i}^{T}\gamma)}{1+exp(x_{i}^{T}\gamma)}$
+
+1. Poisson: $\exp(-\exp(x_{i}^{T}\gamma))$
+2. Negative Binomial, Type 1: $(1+\theta)^{-\exp(x_{i}^{T}\theta)/\theta}$
+3. Negative Binomial, Type 2: $[\alpha/(\exp(x_{i}^{T}\alpha)+\alpha)^\alpha]$
+4. Logit: $\frac{\exp(x_{i}^{T}\gamma)}{1+\exp(x_{i}^{T}\gamma)}$
 5. Probit: $\Theta(x_{i}^{T}\gamma)$
+
 For $f_2$, we have
+
 1. Poisson
 2. Negative Binomial
-3. Poisson-log-normal $p(x) = (exp(x*\mu + x^2 * \sigma/2)*(2*\pi*\sigma)^{-1/2})/x! * g(y)$
+3. Poisson-log-normal $p(x) = (\exp(x\mu + x^2 \sigma/2) \cdot (2 \pi \sigma)^{-1/2})/x! \cdot g(y)$
+
 # Results
 
 ## Table 1
 
-```{r, child="rmd/table-1.Rmd"}
+```{r message=FALSE, echo = FALSE}
+kable(read.csv("out/table-1.csv", row.names=1, check.names=FALSE), 
+      digits = 3, booktabs = T) %>%
+  kable_styling(position = "center") %>%
+  kable_styling(latex_options = "HOLD_position")
 ```
-## Table 2
 
-```{r, child="rmd/table-2.Rmd"}
+## Table 2
+The estimates for the basic Poisson model, with and without individual specific effects, are
+displayed in Table II. The log-likelihood of the models are as follows.
+
+- The pooled model: -86566.18.
+- The random effect model: -70176.72.
+- The fixed effect model: -42738.86.
+
+The estimations of coefficients and stander errors of the models are as follows.
+
+```{r message=FALSE, echo = FALSE}
+kable(read.csv("out/table-2.csv", row.names=1, check.names=FALSE), 
+      digits = 3, booktabs = T) %>% 
+  column_spec(2:8, width = "2cm") %>%
+  kable_styling(position = "center") %>%
+  kable_styling(latex_options = "HOLD_position")
 ```
 
 ## Table 3
 
-```{r, child="rmd/table-3.Rmd"}
+Five different models are explored.
+
+```{r message=FALSE, echo = FALSE}
+kable(read_csv("out/table-3.csv"), booktabs = T) %>%
+  kable_styling(position = "center") %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+
+By dividing the visitors two groups at mean visit times, we can see that the previously less frequent visit groups are more affected by the reform. Assuming that there were no significant changes in other variables like business cycles, major socio-political events, or pandemic-related behavior changes over the short two year frame of 1996 - 1998 in Germany. 
+
+## Table 5
+
+- From the Poisson Model, the relative change in expected doctor visits from 1996 to 1998 is -10.060%
+- From the Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is -8.890%
+-From the Zero Inflation Model, the relative change in expected doctor visits from 1996 to 1998 is -6.321%
+- From the Hurdle Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is -3.482%
+
+# For future Research
+
+The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (https://doi.org/10.1016/S0140-6736(17)31280-1) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strengthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are 1) mandatory universal coverage, 2) introduction of a uniform contribution rate, a central reallocation pool  and resource allocation to sickness funds according to a morbidity-based risk structure compensation scheme, 3) choice of tariffs in statutory health insurance, while the 2011 Acts are more focused on supplementary premiums and reimbursement for new pharmaceutical products. It should be noted that to evaluate the effect of both reforms, in addition to variables we used in previous analysis, we might want to incorporate more economic variables related to economic growth, business cycles, considering the 2008 recession and 2010s European Sovereign Debt Crisis.
+
+\pagebreak
+
+# Appendix
+
+## The calculation of table 1
+```{r, child="rmd/table-1.Rmd", eval = TRUE}
+```
+## The calculation of table 2
+```{r, child="rmd/table-2.Rmd", eval = TRUE}
+```
+## The calculation of table 3
+```{r, child="rmd/table-3.Rmd", eval = TRUE}
+```
+## The calculation of table 5
+```{r, child="rmd/table-5.Rmd", eval = TRUE}
 ```

@@ -124,3 +124,17 @@ res_df_col3
 summary(model_fit)$loglik[1]
 ```
 
+Export the calculations
+```{r}
+col_1 <- res_df_col1[,c("Estimate", "Robust SE")]
+write.csv(col_1, "../out/table-2-pooled.csv")
+
+col_2 <- res_df_col2[,c("Estimate", "Std. error")]
+colnames(col_2) <- c("Estimate", "Robust SE")
+write.csv(col_2, "../out/table-2-random.csv")
+
+col_3 <- res_df_col3[,c("Estimate", "Std. error")]
+colnames(col_3) <- c("Estimate", "Robust SE")
+write.csv(col_3, "../out/table-2-fixed.csv")
+```
+
