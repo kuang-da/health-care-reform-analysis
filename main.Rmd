@@ -20,15 +20,22 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Summary
 
+Our final project based on the paper which evaluates the German health care reform of 1997. The individual number of doctor visits is the outcome measure. The data set is from German Socio-Economic Panel for the years 1995-1999, 32837 observations are collected.
+
+As the final project for econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. Five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model are fitted to the data set and evaluated by log-likelihood, AIC and BIC. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that XXX. Our conclusions are consistent with the authors of the original paper.
+
+Besides following the analysis in the original paper, we also generate some visualization to describe the data distributions and demonstrate the fitness of the models. The topics we learned in STAT 520 (Ordinary least square, Heteroscedasticity, Two-stage least squares) give us a solid foundation to understand the advanced topics and models such as Generalized linear models, Zero-inflated models, and Hurdle models in the paper.
+
 # Introduction 
 
-As one of the OECD (The Organization for Economic Co-operation and Development) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes expanding technological and expenditure possibilities in the healthcare services, the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know 1) whether the reform of 1997 is successful and effective and 2) how the effect of reform differs among different groups of the population.  
+As one of the OECD (The Organization for Economic Co-operation and Development) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes (1) expanding technological and expenditure possibilities in the healthcare services, (2) the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know (1) whether the reform of 1997 is successful and effective and (2) how the effect of reform differs among different groups of the population.  
 
 Some background information needs to be elaborated on before we dig into the analysis. The general aim of this reform is to limit healthcare expenditure and its growth rate. The change in co-payments (for prescription) drugs is the most eminent element of the 1997 reform, with measures like an extended exclusion list of drugs not covered at all by social insurance, price ceilings related to the availability of generics, and a binding overall annual budget for drugs and doctor service. 
 
 An increased co-payment has a direct fiscal effect of reducing the proportion of cost covered by the insurer. The increased out-of-pocket expenses would disincentive customers from excessive use of prescription drugs and medical resources as a moral hazard. 
 
 The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. The rationale for this approach, other than the unavailability of data on drug use, is the correlation between prescription drug use and doctor visit. The implemented policy will increase the expense of drugs, and the patient might try to persuade the doctor to prescribe in larger size or reduce their drug use while not seeing the doctor. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
+
 
 # Data
 
@@ -78,9 +85,11 @@ side variables serve as controls for any effects these variables might have on t
 over time.
 
 # Econometric Models for consideration
-We consider the following few models
 
-## Poisson Regression Model
+Since the response variables, the number of the doctor visits, are count data, we first consider generalized linear model (GLM) with Poisson distribution or Negative binomial distribution.
+
+## generalized linear model
+###  Poisson Regression Model
 We take the Poisson distribution as the standard probability distribution for count data
 $P(y_i|\lambda_i)=\frac{\exp(-\lambda_i) \cdot \lambda_{i}^{y_{i}}}{y_{i}!}$ s.t
 $\mathrm{E}\left(y_{i} \mid \lambda_{i}\right)=\operatorname{Var}\left(y_{i} \mid \lambda_{i}\right)=\lambda_{i}$
@@ -93,6 +102,10 @@ It should be noted that the Poisson Model has a few shortcomings:
 2. It ignore the Panel Structure of the data and the Standard Errors need to incorporate possible serial correlation (unless we can assume constant individual effect over time)
 
 3. The single index structure of the Poisson Regression model implies that the distribution is determined w.r.t the given mean, and we cannot evaluate the effect of the reform over the distribution (i.e cannot how it affect different sections of the population)
+
+### Poisson Regression Model
+
+### Negative binomial regression Model
 
 ## Hurdle Models
 Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - \mathrm{min}(1,y)$, the probability function of the hurdle model is $f\left(y_{i}\right)=f_{1 i}^{d_{i}}\left[\left(1-f_{1 i}\right) f_{T}\left(y_{i} \mid y_{i}>0\right)\right]^{1-d_{i}}$, with $f_{1i} = P(d_i = 1)$, $f_T(y_i|y_i>0) =  \frac{f_2 (y_i)}{1-f_{2i}(0)}$.
@@ -169,14 +182,14 @@ The index models used in this research can be applied to study the effect of oth
 # Appendix
 
 ## The calculation of table 1
-```{r, child="rmd/table-1.Rmd", eval = TRUE}
+```{r, child="rmd/table-1.Rmd", eval = FALSE}
 ```
 ## The calculation of table 2
-```{r, child="rmd/table-2.Rmd", eval = TRUE}
+```{r, child="rmd/table-2.Rmd", eval = FALSE}
 ```
 ## The calculation of table 3
-```{r, child="rmd/table-3.Rmd", eval = TRUE}
+```{r, child="rmd/table-3.Rmd", eval = FALSE}
 ```
 ## The calculation of table 5
-```{r, child="rmd/table-5.Rmd", eval = TRUE}
+```{r, child="rmd/table-5.Rmd", eval = FALSE}
 ```
