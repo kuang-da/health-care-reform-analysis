@@ -1,0 +1,25 @@
+For 
+```{r}
+sprintf("From the Poisson Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(model_fit_pos)[15]-coef(model_fit_pos)[13])-1))
+```
+
+```{r}
+sprintf("From the Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(model_fit_negbin)[15]-coef(model_fit_negbin)[13])-1))
+
+```
+```{r}
+sprintf("From the Zero Inflation Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(model_zeroinf_negbin)[15]-coef(model_zeroinf_negbin)[13])-1))
+```
+
+```{r}
+sprintf("From the Hurdle Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is %s%%", 100*(exp(coef(hurdle_negbin)[15]-coef(hurdle_negbin)[13])-1))
+```
+
+```{r}
+sprintf("From the Two Component Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 for less frequent group is %s%%", 100*(exp(coef(model_fit_negbin1)[15]-coef(model_fit_negbin1)[13])-1))
+sprintf("From the Two Component Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 for more frequent group is %s%%", 100*(exp(coef(model_fit_negbin2)[15]-coef(model_fit_negbin2)[13])-1))
+```
+By dividing the visitors two groups at mean visit times, we can see that the previously less frequent visit groups are more affected by the reform. Assuming that there were no significant changes in other variables like business cycles, major socio-political events, or pandemic-related behavior changes over the short two year frame of 1996 - 1998 in Germany. 
+
+## For future Research
+The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (https://doi.org/10.1016/S0140-6736(17)31280-1) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strenthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are 1) mandatory universal coverage, 2) introduction of a uniform contribution rate, a central reallocation pool  and resource allocation to sickness funds according to a morbidity-based risk structure compensation scheme, 3) choice of tariffs in statutory health insurance, while the 2011 Actss are more focused on supplementary premiums and reimburssement for new pharmaceutical products. It should be noted that to evaluate the effect of both reforms, in addition to variables we used in previous analysis, we might want to incorporate more economic variables related to economic growth, business cycles, considering the 2008 recession and 2010s European Sovereign Debt Crisis.
