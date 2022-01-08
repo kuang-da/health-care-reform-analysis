@@ -95,6 +95,7 @@ res_df_col2 <- cbind(coefficients(summary(model_fit)), confint(model_fit))[seq(2
 rownames(res_df_col2) <- selected_row_names_vec
 res_df_col2
 ```
+
 ```{r}
 summary(model_fit)$loglik[1]
 ```
@@ -136,5 +137,41 @@ write.csv(col_2, "../out/table-2-random.csv")
 col_3 <- res_df_col3[,c("Estimate", "Std. error")]
 colnames(col_3) <- c("Estimate", "Robust SE")
 write.csv(col_3, "../out/table-2-fixed.csv")
+```
+
+
+```{r}
+col_1
+```
+```{r}
+    col_2 %>%
+    data.frame() %>%
+    tibble::rownames_to_column()
+```
+
+```{r}
+col_1 %>%
+  data.frame() %>%
+  tibble::rownames_to_column(var = 'index') %>%
+  rename(`Pooled Estimate`=`Estimate`, 
+         `Pooled Robust SE`=`Robust.SE`) %>%
+  left_join(
+    col_2 %>%
+    data.frame() %>%
+    tibble::rownames_to_column(var = 'index') %>%
+    rename(`Random Effects Estimate`=`Estimate`, 
+           `Random Effects Robust SE`=`Robust.SE`),
+    by='index'
+  ) %>%
+    left_join(
+    col_3 %>%
+    data.frame() %>%
+    tibble::rownames_to_column(var = 'index') %>%
+    rename(`Fixed Effects Estimate`=`Estimate`, 
+           `Fixed Effects Robust SE`=`Robust.SE`),
+    by='index'
+  ) %>% 
+  column_to_rownames(var = 'index') %>%
+  write.csv("../out/table-2.csv")
 ```
 

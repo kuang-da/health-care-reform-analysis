@@ -93,7 +93,7 @@ res = c(count_95, mdoctco_95, NA, mnovisit_95, mage_95, munemp_95,msport_95, mgo
            count_99, mdoctco_99, mdoctcogrowth99, mnovisit_99, mage_99, munemp_99, msport_99, mgoodh_99,mbadh_99)
 disp = matrix(data = res, nrow = 9, ncol = 5, byrow = FALSE,
        dimnames = NULL)
-rownames(disp) = c('Total Observation','No. doctor visits', 'relative change in %', 'No. doctor visits (0/1)', 'Age', 'Unemployed (0/1)', 'Active sport (0/1)', 'Good health (0/1)', 'Bad health (0/1)' )
+rownames(disp) = c('Total Observation','No. doctor visits', 'Relative change in %', 'No. doctor visits (0/1)', 'Age', 'Unemployed (0/1)', 'Active sport (0/1)', 'Good health (0/1)', 'Bad health (0/1)' )
 colnames(disp) = c('1995', '1996', '1997', '1998', '1999')
 disp
 ```

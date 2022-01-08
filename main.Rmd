@@ -189,6 +189,14 @@ For $f_2$, we have
 
 ## Table 1
 
+We first reproduce table 1 to generate the summary statistics for the variables of the analysis. One can have the following observations
+
+- The average number of doctor visits per quarter declined from 2.66 to 2.35 between 1996 and 1998.
+- The decline of the number of doctor visit between 1995 and 1996 is 1%. The increase between 1998 and 1999 is 2%. Therefore, the large drop (7.8%) between 1997 and 1998 in the number of visits clearly coincides with the timing of the reform.
+- The increase of the number of doctor visit between 1998 and 1999 also supports the behavior hypothesis. It is because that the 1997 reform enjoyed only a short lifespan. The partial repeal of the 1997 reform was one of the first items on the political agenda of the new government selected in 1998, and a new law lowered the co-payments by between DM 1 and DM 3, effective January 1, 1999.
+- The proportion of people reporting good health from 56 to 60% while the proportion reporting bad health decrease from 14 to 13%. This can be the partial reason supporting the idea that the 1997 reform did not worsen the general health status.
+
+
 ```{r message=FALSE, echo = FALSE}
 kable(read.csv("out/table-1.csv", row.names=1, check.names=FALSE), 
       digits = 3, booktabs = T) %>%
@@ -197,44 +205,60 @@ kable(read.csv("out/table-1.csv", row.names=1, check.names=FALSE),
 ```
 
 ## Table 2
-The estimates for the basic Poisson model, with and without individual specific effects, are
-displayed in Table II. The log-likelihood of the models are as follows.
+
+To fit and describe the number of doctor visit as the count data, we first applied Poisson regression while considering the random and fixed effects. The log-likelihood of the models are as follows.
 
 - The pooled model: -86566.18.
 - The random effect model: -70176.72.
 - The fixed effect model: -42738.86.
 
-The estimations of coefficients and stander errors of the models are as follows.
+The estimations of coefficients and stander errors for the basic Poisson model, with and without individual specific effects, are displayed in Table II. 
 
 ```{r message=FALSE, echo = FALSE}
+opts <- options(knitr.kable.NA = "")
 kable(read.csv("out/table-2.csv", row.names=1, check.names=FALSE), 
-      digits = 3, booktabs = T) %>% 
+      digits = 5, booktabs = T) %>% 
   column_spec(2:8, width = "2cm") %>%
   kable_styling(position = "center") %>%
   kable_styling(latex_options = "HOLD_position")
 ```
 
+One can make the following observations from Table II
+
+- Men have less doctor visits than women
+- The expected number of doctor visits is u-shaped in age because \verb|age| is negative.
+- The health indicators (\verb|Good health| and \verb|Bad health|) have the largest effect among all variables.
+- There is a statistically significant decline in the expected number of doctor visits between 1996 and 1998 in all three model specifications.
+
 ## Table 3
 
-Five different models are explored.
+Four additional models were applied on the same data set. Likelihood ratio tests clearly reject the Poisson model against the alternative models with unobserved heterogeneity.  AIC is used to pick the best model among all five models. We also calculated BIC as the alternative criteria and it supported the same conclusion as AIC. Zero-inflated negative binomial and hurdle negative binomial models are the best two models. 
 
 ```{r message=FALSE, echo = FALSE}
-kable(read_csv("out/table-3.csv"), booktabs = T) %>%
+kable(read.csv("out/table-3.csv", check.names=FALSE), booktabs = T) %>%
   kable_styling(position = "center") %>%
   kable_styling(latex_options = "HOLD_position")
 ```
 
-
-By dividing the visitors two groups at mean visit times, we can see that the previously less frequent visit groups are more affected by the reform. Assuming that there were no significant changes in other variables like business cycles, major socio-political events, or pandemic-related behavior changes over the short two year frame of 1996 - 1998 in Germany. 
-
 ## Table 5
 
-- From the Poisson Model, the relative change in expected doctor visits from 1996 to 1998 is -10.060%
-- From the Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is -8.890%
--From the Zero Inflation Model, the relative change in expected doctor visits from 1996 to 1998 is -6.321%
-- From the Hurdle Binomial Model, the relative change in expected doctor visits from 1996 to 1998 is -3.482%
+The relative changes in expected doctor visits from 1996 to 1998 for each models are as follows. The basic models (Poisson and Negative Binomial models) estimate the reform effect as -10% and -8%. However the structural models (Zero-inflated negative binomial and Hurdle negative binomial models) estimate the reform effect as -6% and -3%. The differences between the two kinds of models support the idea that the survey, which was conducted in the hospital, was over-represented by patients with more doctor visits. 
 
-# For future Research
+```{r message=FALSE, echo = FALSE}
+table5_df <- tibble(Models=c("Poisson", "Negative Binomial", 
+                    "Zero-inflated Negative Binomial", 
+                    "Hurdel Negative Binomial Model"),
+           "Delta % (96, 98)"=c("-10.060%", "-8.890%", "-6.321%", "-3.482%"))
+
+
+                    # "Hurdle Probit Poisson Log Normal Model"
+
+kable(table5_df, booktabs = T) %>%
+  kable_styling(position = "center") %>%
+  kable_styling(latex_options = "HOLD_position")
+```
+
+# Discussion
 
 The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (https://doi.org/10.1016/S0140-6736(17)31280-1) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strengthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are 1) mandatory universal coverage, 2) introduction of a uniform contribution rate, a central reallocation pool  and resource allocation to sickness funds according to a morbidity-based risk structure compensation scheme, 3) choice of tariffs in statutory health insurance, while the 2011 Acts are more focused on supplementary premiums and reimbursement for new pharmaceutical products. It should be noted that to evaluate the effect of both reforms, in addition to variables we used in previous analysis, we might want to incorporate more economic variables related to economic growth, business cycles, considering the 2008 recession and 2010s European Sovereign Debt Crisis.
 
