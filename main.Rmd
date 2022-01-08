@@ -36,13 +36,13 @@ An increased co-payment has a direct fiscal effect of reducing the proportion of
 
 The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. The rationale for this approach, other than the unavailability of data on drug use, is the correlation between prescription drug use and doctor visit. The implemented policy will increase the expense of drugs, and the patient might try to persuade the doctor to prescribe in larger size or reduce their drug use while not seeing the doctor. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
 
+In this report, we will first describe the dataset and how to organize them as the systematic components, then introduce Generalized linear models, Zero-inflated models, and Hurdle models. To this end, five different models are fitted to the data set and we will discuss and interpret the results.
 
 # Data
 
-The primary empirical strategy is to pool the data over the five years and estimate the effects of the reforms by comparing the expected number of visits in 1998 and 1996 ceteris paribus, i.e., for an individual with given characteristics. 
+The GSOEP is an ongoing annual household survey and the author selected fives years of data centered around the year of the reform, i.e. 1995-1999. The primary empirical strategy is to pool the data over the five years and estimate the effects of the reforms by comparing the expected number of visits in 1998 and 1996 *ceteris paribus*, i.e., for an individual with given characteristics. 
 
-The models that will be estimated in the following sections all include a systematic component
-(linear predictor) of the type
+The models that will be estimated in the following sections all include a systematic component (linear predictor) of the type
 
 \begin{align*}
 x'_{it}\beta 
@@ -67,10 +67,10 @@ as other unobserved influences.
 - A time-consistent measure of health over 1995–1999 is
 provided by a subjective self-assessment in response to the question: "How good do you perceive
 your own health at current?", with responses "very good", "good", "fair", "poor" and "very poor".
-The two best responses are classified as 'good health', the two worst responses as 'bad health',
+The two best responses are classified as "good health", the two worst responses as "bad health",
 with fair health being the reference group. 
 - Another proxy for health is the age polynomial. 
-- Finally, engaging in 'active sports' (defined as a weekly or higher frequency) acts as a further proxy for good health, although it might have an additional direct effect on the demand for health services as well. 
+- Finally, engaging in "active sports" (defined as a weekly or higher frequency) acts as a further proxy for good health, although it might have an additional direct effect on the demand for health services as well. 
 
 The budget constraint is determined by income and prices. The main price variables are the
 opportunity costs of a visit to a doctor which, in turn, depend on education level and employment
@@ -86,15 +86,47 @@ over time.
 
 # Econometric Models for consideration
 
-Since the response variables, the number of the doctor visits, are count data, we first consider generalized linear model (GLM) with Poisson distribution or Negative binomial distribution.
+Since the response variables, the number of the doctor visits, are count data, we first consider generalized linear model (GLM) with Poisson distribution. 
 
-## generalized linear model
+## Generalized linear model
+
+Generalized linear model (GLM) allows the response variable $y$ to have an error distribution other than a normal distribution. It has three main components: (1) Systematic component (2) Link function (3) Probability distributions. We define $\{(y_i, \mathbf x_{i*})\}_{i=1}^n$ as following a generalized linear model based on the exponential family $f_\theta$ if 
+
+\[
+y_i \sim f_{\theta_i}, ~~~ \theta_i = \mathbf{x_{i*}^T} \mathbf{\beta}
+\]
+
+The exponential family is defined as 
+
+\[
+f_\theta(y) = \exp(\theta y - \psi(\theta)) h(y)
+\]
+
+Here $\theta$ is called the natural parameter, $\psi$ is called the log-partition function, and $h$ is called the base measure. The distribution with density $f_{\theta}$ is called a one-parameter natural exponential family.
+
 ###  Poisson Regression Model
+
 We take the Poisson distribution as the standard probability distribution for count data
-$P(y_i|\lambda_i)=\frac{\exp(-\lambda_i) \cdot \lambda_{i}^{y_{i}}}{y_{i}!}$ s.t
+\[ 
+P(y_i|\lambda_i)=\frac{\exp(-\lambda_i) \cdot \lambda_{i}^{y_{i}}}{y_{i}!} 
+\] s.t
 $\mathrm{E}\left(y_{i} \mid \lambda_{i}\right)=\operatorname{Var}\left(y_{i} \mid \lambda_{i}\right)=\lambda_{i}$
-We assume heterogeneous population with covariance $x_i$ in regression,$\lambda_{i}=\exp (x_{i}^{T} \beta)$, $y = (y_1,...y_N)^{T}$, $x = (x_1,...x_N)^{T}$. The data was randomly sampled $P(y \mid x)=\exp \left[-\sum_{i=1}^{N} \exp \left(x_{i}^{\prime} \beta\right)\right] \prod_{i=1}^{N} \frac{\left[\exp \left(x_{i}^{\prime} \beta\right)\right]^{y_{i}}}{y_{i} !}$, and we look for MLE.
-The relative change in expected doctor visits as reform effects can be calculated with $\Delta \%_{(98,96)} = 100 [\frac{\mathrm{E}(y_{i, 98} | x)}{\mathrm{E}(y_{i, 96} | x )}-1] =100[\exp (\beta_{98}-\beta_{96})-1]$
+
+We assume heterogeneous population with covariance $x_i$ in regression, $\lambda_{i}=\exp (x_{i}^{T} \beta)$, $y = (y_1,...y_N)^{T}$, $x = (x_1,...x_N)^{T}$. The data was randomly sampled by
+
+\[
+P(y \mid x)=\exp \left[-\sum_{i=1}^{N} \exp \left(x_{i}^{\prime} \beta\right)\right] \prod_{i=1}^{N} \frac{\left[\exp \left(x_{i}^{\prime} \beta\right)\right]^{y_{i}}}{y_{i} !}
+\], and we look for the maximum likelihood (MLE).
+
+The relative change in expected doctor visits as reform effects can be calculated with 
+
+\begin{align*}
+\Delta \%_{(98,96)} 
+=& 100 \times [\frac{\mathrm{E}(y_{i, 98} | x)}{\mathrm{E}(y_{i, 96} | x )}-1] \\
+=& 100 \times [\exp (\beta_{98}-\beta_{96})-1]
+\end{align*}
+
+
 It should be noted that the Poisson Model has a few shortcomings:
 
 1. The assumption exclude the case of unobserved heterogeneity
@@ -103,12 +135,41 @@ It should be noted that the Poisson Model has a few shortcomings:
 
 3. The single index structure of the Poisson Regression model implies that the distribution is determined w.r.t the given mean, and we cannot evaluate the effect of the reform over the distribution (i.e cannot how it affect different sections of the population)
 
-### Poisson Regression Model
+#### The random effect and fixed effect models
+
+In statistics, a random effects model, also called a variance components model, is a statistical model where the model parameters are random variables. It assumes that the data from a hierarchy of different populations whose differences relate to that hierarchy and the hetrogeneity is uncorrelated with the independent variables. Random effect models assist in controlling for unobserved heterogeneity when the heterogeneity is constant over time and not correlated with independent variables. This constant can be removed from longitudinal data through differencing, since taking a first difference will remove any time invariant components of the model. [[From wikipedia https://en.wikipedia.org/wiki/Random_effects_model]]
+
+On the other side, a fixed effects model is a statistical model in which the model parameters are fixed or non-random quantities. It assumes that the individual-specific effects are correlated with the independent variables. It assists in controlling for omitted variable bias due to unobserved heterogeneity when this heterogeneity is constant over time. This heterogeneity can be removed from the data through differencing, for example by subtracting the group-level average over time, or by taking a first difference which will remove any time invariant components of the model. [[From wikipedia https://en.wikipedia.org/wiki/Fixed_effects_model]]
 
 ### Negative binomial regression Model
 
+To model the count data, we can also use Negative binomial regression. It is a generalization of Poisson regression. Negative binomial distribution can be considered as a generalization of Poisson distribution by including a gamma noise variable which has a mean of 1 and a scale parameter of $\nu$. The poisson-gamma mixture distribution that results is 
+
+\[
+\mathrm{Pr}(Y = y_i | \mu_i, \alpha) = \frac{\Gamma(y_i + \alpha^{-1})}{\Gamma(y_i +1)\Gamma(\alpha^{-1})} (\frac{\alpha^{-1}}{\alpha^{-1}})
+\]
+
+, where $\mu_i = t_i \mu$ and $\alpha = \frac{1}{\nu}$.
+
+## Zero-inflated negative binomial model
+
+Zero-inflated models have been developed to cope with zero-inflated outcome data with over-dispersion (negative binomial) or without (Poisson distribution). In this project, zero-inflated negative binomial regression is applied on the dataset.
+
+A zero-inflated (ZI) model assumes that the zero observations have two different origins: "structural" and "sampling". The sampling zeros are due to the usual negative binomial distribution, which assumes that those zero observations happened by chance. Zero-inflated models assume that some zeros are observed due to some specific structure in the data. [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3238139/]] 
+
+For example, in the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they were cured; these are the structural zeros since they cannot exhibit the reform of the healthcare. Others participants have zero number of visit because they purchased more medicines because of the healthcare reform and it changed their behavior. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts.
+
 ## Hurdle Models
-Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - \mathrm{min}(1,y)$, the probability function of the hurdle model is $f\left(y_{i}\right)=f_{1 i}^{d_{i}}\left[\left(1-f_{1 i}\right) f_{T}\left(y_{i} \mid y_{i}>0\right)\right]^{1-d_{i}}$, with $f_{1i} = P(d_i = 1)$, $f_T(y_i|y_i>0) =  \frac{f_2 (y_i)}{1-f_{2i}(0)}$.
+
+In contrast to ZI models, a hurdle model assumes that all zero data are from one "structural" source. The positive (i.e., non-zero) data have "sampling" origin, following either truncated Poisson or truncated negative-binomial distribution[[https://www.sciencedirect.com/science/article/abs/pii/0304407686900023]]. The hurdle model has been popular in the health literature, in part because it can be given a structural interpretation that seems to agree well with the intuition of a dual decision structure of the demand process.
+
+For example, consider a study of of the original paper. It is also reasonable to assume that it is most likely that healthy people will zero number of doctor visit and people who feel uncomfortable or have not finish the treatment will have non-zero number of doctor visits in a year. Hence the zero observations can come from only one "structural" source, the patients. If a subject is considered a patient., they do not have the "ability" to score zero number of doctor visits in a whole year and will always have a positive number in a hurdle model with either truncated Poisson or truncated negative binomial distributions.
+
+Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - \mathrm{min}(1,y)$, the probability function of the hurdle model is 
+
+\[
+f\left(y_{i}\right)=f_{1 i}^{d_{i}}\left[\left(1-f_{1 i}\right) f_{T}\left(y_{i} \mid y_{i}>0\right)\right]^{1-d_{i}}
+\], with $f_{1i} = P(d_i = 1)$, $f_T(y_i|y_i>0) =  \frac{f_2 (y_i)}{1-f_{2i}(0)}$.
 
 For $f_1$, we have the following hurdle functions as candidates
 
