@@ -188,6 +188,8 @@ For $f_2$, we have
 2. Negative Binomial
 3. Poisson-log-normal $p(x) = (\exp(x\mu + x^2 \sigma/2) \cdot (2 \pi \sigma)^{-1/2})/x! \cdot g(y)$
 
+## Generalized linear model
+
 # Results
 
 ## Table 1
@@ -207,10 +209,6 @@ kable(read.csv("out/table-1.csv", row.names=1, check.names=FALSE),
   kable_styling(latex_options = "HOLD_position")
 ```
 
-
-![Box plot and violin plot of the numbers of doctor visits per year](out/box_violin.png){width=75%}
-
-![Density Histogram of the numbers of doctor visits per year](out/hist.png){width=50%}
 
 ## Table 2
 
@@ -233,7 +231,7 @@ kable(read.csv("out/table-2.csv", row.names=1, check.names=FALSE),
 
 One can make the following observations from Table II
 
-- Men have less doctor visits than women
+- Men have less doctor visits than women.
 - The expected number of doctor visits is u-shaped in age because \verb|age| is negative.
 - The health indicators (\verb|Good health| and \verb|Bad health|) have the largest effect among all variables.
 - There is a statistically significant decline in the expected number of doctor visits between 1996 and 1998 in all three model specifications.
@@ -267,6 +265,14 @@ kable(table5_df, booktabs = T) %>%
 ```
 
 # Discussion
+
+As an expansion of the author's work, we tried to visualize the distribution of the number of the visits of doctors per year with a box plot and violin plot (Figure 1). But the outliers make it difficult to tell the differences of the median of numbers of visits among the years. The density histogram (Figure 2) of the numbers of doctor visits is also generated. We can observe that year 1998 has a slightly more zeros than other years. But any of the above visualizations are significant enough to be used as a evidence showing the effect of 1997 reform, which makes the analysis conducted in the original paper even more important. This visualization exercise help us realize that for the panel data with short time series and many observations. Regression is a more powerful tool to intercept the data than plots.
+
+![Box plot and violin plot of the numbers of doctor visits per year](out/box_violin.png){width=75%}
+
+![Density Histogram of the numbers of doctor visits per year](out/hist.png){width=50%}
+
+As another expansion and alternative to the Hurdle models in the original paper, we applied a zero-inflated negative binomial model (ZINB) on the data. Based on Table 3, ZINB outperformed basic models (POisson and Negative binomial models) but fitted slightly worse than Hurdle Negative binomial model. It supports the idea that Hurdle assumption aligns better to the data. In other words, we tends to believe that all zero data are from one "structural" source.
 
 The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (https://doi.org/10.1016/S0140-6736(17)31280-1) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strengthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are 1) mandatory universal coverage, 2) introduction of a uniform contribution rate, a central reallocation pool  and resource allocation to sickness funds according to a morbidity-based risk structure compensation scheme, 3) choice of tariffs in statutory health insurance, while the 2011 Acts are more focused on supplementary premiums and reimbursement for new pharmaceutical products. It should be noted that to evaluate the effect of both reforms, in addition to variables we used in previous analysis, we might want to incorporate more economic variables related to economic growth, business cycles, considering the 2008 recession and 2010s European Sovereign Debt Crisis.
 
