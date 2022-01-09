@@ -1,0 +1,50 @@
+```{r}
+hist_plt <- hcg %>%
+  mutate(Year=factor(year)) %>%
+  ggplot() +
+  geom_histogram(alpha = 0.5, 
+                 aes(x = doctco,
+                     y = ..density..,
+                     fill = Year), 
+                 position = 'identity', 
+                 alpha = 0.4) + 
+  xlab("Number of doctor visits") +
+  ylab("Density") +
+  theme_bw(base_size=16) + 
+  theme(legend.justification=c(0.9, 0.9), 
+        legend.position=c(0.9, 0.9))
+hist_plt
+```
+
+```{r}
+box_plt <- hcg %>%
+  mutate(Year=factor(year)) %>%
+  ggplot() +
+  geom_boxplot(aes(x=doctco, y=Year)) +
+  xlab("Number of doctor visits") +
+  ylab("Year") +
+  theme_bw(base_size=16)
+box_plt
+```
+
+```{r}
+violin_plt <- hcg %>%
+  mutate(Year=factor(year)) %>%
+  ggplot()+
+  geom_violin(aes(x=doctco, y=Year))+
+  xlab("Number of doctor visits") +
+  ylab("Year") +
+  theme_bw(base_size=16)
+violin_plt
+```
+
+```{r}
+ggsave(plot = hist_plt, file = paste0("../out/hist.png"), width = 5, height = 5)
+ggsave(plot = box_plt, file = paste0("../out/box.png"), width = 5, height = 5)
+ggsave(plot = violin_plt, file = paste0("../out/violin.png"), width = 5, height = 5)
+```
+
+```{r}
+ggsave(plot = grid.arrange(box_plt, violin_plt, ncol=2), file = paste0("../out/box_violin.png"), width = 10, height = 5)
+```
+

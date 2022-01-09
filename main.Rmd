@@ -1,7 +1,8 @@
 ---
 title: "Health Care Reform and the Number of Doctor Visits - An Econometric Analysis"
 output: 
-  - pdf_document
+  pdf_document:
+    extra_dependencies: ["float"]
 ---
 
 ```{r message=FALSE, echo = FALSE}
@@ -15,7 +16,9 @@ library(PLNmodels)
 library(pscl)
 library(knitr)
 library(kableExtra)
+library(gridExtra)
 knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 ```
 
 # Summary
@@ -204,6 +207,11 @@ kable(read.csv("out/table-1.csv", row.names=1, check.names=FALSE),
   kable_styling(latex_options = "HOLD_position")
 ```
 
+
+![Box plot and violin plot of the numbers of doctor visits per year](out/box_violin.png){width=75%}
+
+![Density Histogram of the numbers of doctor visits per year](out/hist.png){width=50%}
+
 ## Table 2
 
 To fit and describe the number of doctor visit as the count data, we first applied Poisson regression while considering the random and fixed effects. The log-likelihood of the models are as follows.
@@ -277,4 +285,8 @@ The index models used in this research can be applied to study the effect of oth
 ```
 ## The calculation of table 5
 ```{r, child="rmd/table-5.Rmd", eval = FALSE}
+```
+
+## Box, violin, and histogram plots
+```{r, child="rmd/distribution-plots.Rmd", eval = FALSE}
 ```
