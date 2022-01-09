@@ -2,7 +2,9 @@
 title: "Health Care Reform and the Number of Doctor Visits - An Econometric Analysis"
 output: 
   pdf_document:
+    latex_engine: xelatex
     extra_dependencies: ["float"]
+    fontsize: 12 pt
 ---
 
 ```{r message=FALSE, echo = FALSE}
