@@ -56,7 +56,7 @@ print(paste0("Log Likelihod:", logLik(model_fit_negbin)))
 ```
 
 ### ZINB Regression Model
-
+It should be noted that if there are
 ```{r}
 model_zeroinf_negbin = zeroinfl(formula = doctco~age+age2+factor(male)+educ+factor(married)+hsize+ factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+ loginc+factor(year)+ factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "negbin")
 
@@ -73,7 +73,14 @@ aic_vec <- c(aic_vec, AIC(model_zeroinf_negbin))
 bic_vec <- c(bic_vec, BIC(model_zeroinf_negbin))
 ```
 
-### Hurdel Negative Binomial Model
+<!-- ### Poisson Lognormal -->
+<!-- ```{r} -->
+<!-- yvec = data_df$doctco -->
+<!-- xmat = data.matrix(data_df[ , -which(names(data_df) %in% c("doctco","id"))]) -->
+<!-- poisson_lognormal = hurdlr::hurdle(yvec, xmat, dist = "poisson", dist.2 = "lognormal") -->
+<!-- summary(poisson_lognormal) -->
+<!-- ``` -->
+### Hurdle Negative Binomial Model
 
 ```{r}
 hurdle_negbin <- hurdle(
@@ -90,6 +97,19 @@ bic_vec <- c(bic_vec, BIC(hurdle_negbin))
 ```{r}
 print(paste0("AIC:", AIC(hurdle_negbin)))
 print(paste0("Log Likelihod:", logLik(hurdle_negbin)))
+```
+
+### Hurdle Negative Binomial Model conditioned visiting experience
+```{r}
+novisit_96 = which(data_df$doctco == 0 & data_df$year ==96)
+novisit_98 = which(data_df$doctco == 0 & data_df$year ==98)
+id_novisit_96 = data_df[novisit_97,]$id
+id_novisit_98 = data_df[novisit_98,]$id
+novisit_id = c(id_novisit_96, id_novisit_98)
+df_visit = subset(data_df, !(data_df$id %in% novisit_id))
+hurdle_negbin_visitonly <- pscl::hurdle(
+  formula = doctco~age+age2+factor(male)+educ+factor(married)+hsize+ factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+ loginc+factor(year)+ factor(emp)+factor(winter)+factor(spring)+factor(fall), data = df_visit, dist = "negbin")
+summary(hurdle_negbin_visitonly)
 ```
 ### Hurdle Probit Possion Log Normal Model
 
@@ -111,14 +131,29 @@ bic_vec <- c(bic_vec, BIC(hurdle_probit_poisson_lognormal))
 
 ```{r eval = FALSE}
 # Try to create subdata based on there relative position in 1996 (mean, or quartiles works)
-sep = quantile(data_df$doctco[data_df$year == 96],probs = 0.67)
-rownum_sub96 = which(data_df$doctco < sep & data_df$year ==96)
-rownum_upp96 = which(data_df$doctco >= sep & data_df$year ==96)
-id_sub96 = data_df[rownum_sub96,]$id
-df_sub96 = data_df[data_df$id %in% id_sub96,]
-id_upp96 = data_df[rownum_upp96,]$id
-df_upp96 = data_df[data_df$id %in% id_upp96,]
+# sep = quantile(data_df$doctco[data_df$year == 96],probs = 0.66)
 
+sep = quantile(data_df$doctco[data_df$year == 96], probs = 0.67)
+
+# rownum_sub96 = which(data_df$doctco <= sep & data_df$year ==96)
+# rownum_upp96 = which(data_df$doctco > sep & data_df$year ==96)
+# length(rownum_sub96) + length (rownum_upp96)
+# id_sub96 = data_df[rownum_sub96,]$id
+# 
+# (length(id_sub96) + length(id_upp96))*3
+# 
+# df_sub96 = data_df[data_df$id %in% id_sub96,]
+# id_upp96 = data_df[rownum_upp96,]$id
+# df_upp96 = data_df[data_df$id %in% id_upp96,]
+# dim(data_df)[1]
+# mean(df_sub96$doctco)
+# mean(df_upp96$doctco)
+# dim(df_sub96)[1] + dim(df_upp96)[1]
+
+sub96 = subset(data_df, (data_df$year == 96 & data_df$doctco < sep))
+upp96 = subset(data_df, (data_df$year == 96 & data_df$doctco >= sep))
+  
+(dim(sub96)+dim(upp96)) == dim(data_df)
 model_fit_negbin1 <- MASS::glm.nb(
   doctco~age+age2+factor(male)+educ+factor(married)+hsize+
     factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+

@@ -19,6 +19,8 @@ library(pscl)
 library(knitr)
 library(kableExtra)
 library(gridExtra)
+library(hurdlr)
+library(quantreg)
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 ```

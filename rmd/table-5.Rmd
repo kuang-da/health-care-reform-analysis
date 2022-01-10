@@ -17,6 +17,10 @@ From the Hurdle Binomial Model, the relative change in expected doctor visits fr
 ```{r}
 100*(exp(coef(hurdle_negbin)[15]-coef(hurdle_negbin)[13])-1)
 ```
+<!-- While on the other hand, if we only consider those who had ever visit doctors during 1996 - 1998, the reform effect is -->
+<!-- ```{r} -->
+<!-- 100*(exp(coef(hurdle_negbin_visitonly)[15]-coef(hurdle_negbin_visitonly)[13])-1) -->
+<!-- ``` -->
 
 ```{r, eval = FALSE}
 sprintf("From the Two Component Negative Binomial Model, the relative change in expected doctor visits from 1996 to 1998 for less frequent group is %s%%", 100*(exp(coef(model_fit_negbin1)[15]-coef(model_fit_negbin1)[13])-1))
