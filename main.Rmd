@@ -187,7 +187,15 @@ For $f_2$, we have
 
 ## Table 1
 
-We first reproduce table 1 to generate the summary statistics for the variables of the analysis. One can have the following observations
+We first reproduce table 1 to generate the summary statistics for the variables of the analysis. 
+
+* In general, the health level of people increased
+  + Despite volatile averages, the proportion of people in active sports increased from 24.7% to 30.7%
+  + The proportion of people reporting good health increased from 56.2% to 59.5%, while the proportion of people reporting poor health decreased from 13.8% to 12.7%%
+
+* Such trends can be meaningful for further analysis for the following two reasons:
+  + improvements in the perceived health might be able to explain part of the reduction in the number of doctor visits, and one should control for that in order to isolate the reform effect.
+  + these improvements provide some evidence against the possibility that the reforms, while being successful in containing costs, worsened the general health status, illustrating the positive netcontribution to general welfare.
 
 * The average number of doctor visits per quarter declined from 2.66 to 2.35 between 1996 and 1998.
 * The decline of the number of doctor visit between 1995 and 1996 is 1%. The increase between 1998 and 1999 is 2%. Therefore, the large drop (7.8%) between 1997 and 1998 in the number of visits clearly coincides with the timing of the reform.
