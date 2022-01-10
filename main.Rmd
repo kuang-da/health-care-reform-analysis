@@ -1,10 +1,12 @@
 ---
-title: "Health Care Reform and the Number of Doctor Visits - An Econometric Analysis"
+title: "STAT 520 Project"
+subtitle: "Replication Study of _Health Care Reform and the Number of Doctor Visits - An Econometric Analysis_"
+author: Da Kuang, Zhanqi Wang
 output: 
   pdf_document:
     latex_engine: xelatex
     extra_dependencies: ["float"]
-    fontsize: 12 pt
+fontsize: 12 pt
 ---
 
 ```{r message=FALSE, echo = FALSE}
@@ -21,19 +23,21 @@ library(kableExtra)
 library(gridExtra)
 library(hurdlr)
 library(quantreg)
+library(corrplot)
+
 knitr::opts_chunk$set(echo = TRUE)
 knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 ```
 
 # Summary
 
-Our final project based on the paper which evaluates the German health care reform of 1997. The individual number of doctor visits is the outcome measure. The data set is from German Socio-Economic Panel for the years 1995-1999, 32837 observations are collected.
+Our final project based on the paper which evaluates the German health care reform of 1997 (Winkelmann 2004). The individual number of doctor visits is the outcome measure. The data set is from German Socio-Economic Panel for the years 1995-1999, 32837 observations are collected.
 
-As the final project for econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. Five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model are fitted to the data set and evaluated by log-likelihood, AIC and BIC. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that XXX. Our conclusions are consistent with the authors of the original paper.
+As the final project for STAT 520 Applied Econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. We will implement five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model, and evaluate them by log-likelihood, AIC and BIC. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that XXX. Our conclusions are consistent with the authors of the original paper.
 
 Besides following the analysis in the original paper, we also generate some visualization to describe the data distributions and demonstrate the fitness of the models. The topics we learned in STAT 520 (Ordinary least square, Heteroscedasticity, Two-stage least squares) give us a solid foundation to understand the advanced topics and models such as Generalized linear models, Zero-inflated models, and Hurdle models in the paper.
 
-# Introduction 
+# Introduction and Economic Problem of Interst
 
 As one of the OECD (The Organization for Economic Co-operation and Development) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes (1) expanding technological and expenditure possibilities in the healthcare services, (2) the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know (1) whether the reform of 1997 is successful and effective and (2) how the effect of reform differs among different groups of the population.  
 
@@ -41,9 +45,9 @@ Some background information needs to be elaborated on before we dig into the ana
 
 An increased co-payment has a direct fiscal effect of reducing the proportion of cost covered by the insurer. The increased out-of-pocket expenses would disincentive customers from excessive use of prescription drugs and medical resources as a moral hazard. 
 
-The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. The rationale for this approach, other than the unavailability of data on drug use, is the correlation between prescription drug use and doctor visit. The implemented policy will increase the expense of drugs, and the patient might try to persuade the doctor to prescribe in larger size or reduce their drug use while not seeing the doctor. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
+The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. In addition to  the unavailability of direct information on precription drug use, a rationale for this approach is that the demand for prescription drugs and the demand for doctor visits are closely related, if not complementary to each otehr. The implemented policy increased the out-of-pocket expenses for prescription drugs, and the patient might try to persuade the doctor to prescribe in larger size in an appointment or reduce their drug use -- in either case we can see a reduction in doctor visits. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment as a result of reform. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
 
-In this report, we will first describe the dataset and how to organize them as the systematic components, then introduce Generalized linear models, Zero-inflated models, and Hurdle models. To this end, five different models are fitted to the data set and we will discuss and interpret the results.
+In this report, we will first describe the dataset and how to organize them as the systematic components, introduce econometric models like [TBD]. After fitting the model to the dataset, we will analyze and discuss the results.
 
 # Data
 
@@ -63,33 +67,17 @@ x'_{it}\beta
 The reference year is 1995. In addition, there are three dummies for the quarter in which the
 interview took place (winter, autumn, spring). 
 
-There are three general channels through which these variables can affect the demand for doctor
-visits. The first is the underlying health status, the second the budget constraint, and the third the
-preference formation.
+There are three general channels through which these variables can affect the demand for doctor visits. The first is the underlying health status, the second the budget constraint, and the third the preference formation.
 
-There is no direct health status in the GSOEP. We have the following three sets of proxies instead. Clearly, these are only crude measures of health, and one may want to account for the
-possibility of additional unobserved heterogeneity to capture any remaining health aspects, as well
-as other unobserved influences.
+There is no direct health status in the GSOEP. We have the following three sets of proxies instead. Clearly, these are only crude measures of health, and one may want to account for the possibility of additional unobserved heterogeneity to capture any remaining health aspects, as well as other unobserved influences.
 
-- A time-consistent measure of health over 1995–1999 is
-provided by a subjective self-assessment in response to the question: "How good do you perceive
-your own health at current?", with responses "very good", "good", "fair", "poor" and "very poor".
-The two best responses are classified as "good health", the two worst responses as "bad health",
-with fair health being the reference group. 
-- Another proxy for health is the age polynomial. 
-- Finally, engaging in "active sports" (defined as a weekly or higher frequency) acts as a further proxy for good health, although it might have an additional direct effect on the demand for health services as well. 
+* A time-consistent measure of health over 1995–1999 is provided by a subjective self-assessment in response to the question: "How good do you perceive your own health at current?", with responses "very good", "good", "fair", "poor" and "very poor". The two best responses are classified as "good health", the two worst responses as "bad health", with fair health being the reference group. 
+* Another reasonable proxy for health is the age polynomial. 
+* Finally, engaging in "active sports" (defined as once a week or higher frequencies) acts as a further proxy for good health, although it might have an additional direct effect on the demand for health services as well. 
 
-The budget constraint is determined by income and prices. The main price variables are the
-opportunity costs of a visit to a doctor which, in turn, depend on education level and employment
-status. 
+The budget constraint is determined by income and prices. The main price variables are the opportunity costs of a visit to a doctor which, in turn, depend on education level and employment status. 
 
-Several of the variables affect more than one aspect at a time. Age, for instance, matters for
-health, opportunity cost (through the effect of experience on earnings) as well as potentially
-preferences. Similarly, education is an important factor in determining the optimal investment
-in health capital (Grossman, 1972). It is not the goal of this paper to disentangle these various
-transmission channels. Rather, the focus lies on the year dummies, whereas the other right-hand-
-side variables serve as controls for any effects these variables might have on the changes in visits
-over time.
+Several of the variables affect more than one aspect at a time. Age, for instance, matters for health, opportunity cost (through the effect of experience on earnings) as well as potentially preferences. Similarly, education is an important factor in determining the optimal investment in health capital. While all those interactions are worth further investigations, it is not the goal of this paper to analyze these various transmission channels -- the focus lies on the year dummies, whereas the other variables serve as controls for their potential effects on the changes in visits over time.
 
 # Econometric Models for consideration
 
@@ -144,9 +132,9 @@ It should be noted that the Poisson Model has a few shortcomings:
 
 #### The random effect and fixed effect models
 
-In statistics, a random effects model, also called a variance components model, is a statistical model where the model parameters are random variables. It assumes that the data from a hierarchy of different populations whose differences relate to that hierarchy and the hetrogeneity is uncorrelated with the independent variables. Random effect models assist in controlling for unobserved heterogeneity when the heterogeneity is constant over time and not correlated with independent variables. This constant can be removed from longitudinal data through differencing, since taking a first difference will remove any time invariant components of the model. [[From wikipedia https://en.wikipedia.org/wiki/Random_effects_model]]
+In statistics, a random effects model, also called a variance components model, is a statistical model where the model parameters are random variables. It assumes that the data from a hierarchy of different populations whose differences relate to that hierarchy and the hetrogeneity is uncorrelated with the independent variables. Random effect models assist in controlling for unobserved heterogeneity when the heterogeneity is constant over time and not correlated with independent variables. This constant can be removed from longitudinal data through differencing, since taking a first difference will remove any time invariant components of the model. (Wooldridge 2011)
 
-On the other side, a fixed effects model is a statistical model in which the model parameters are fixed or non-random quantities. It assumes that the individual-specific effects are correlated with the independent variables. It assists in controlling for omitted variable bias due to unobserved heterogeneity when this heterogeneity is constant over time. This heterogeneity can be removed from the data through differencing, for example by subtracting the group-level average over time, or by taking a first difference which will remove any time invariant components of the model. [[From wikipedia https://en.wikipedia.org/wiki/Fixed_effects_model]]
+On the other side, a fixed effects model is a statistical model in which the model parameters are fixed or non-random quantities. It assumes that the individual-specific effects are correlated with the independent variables. It assists in controlling for omitted variable bias due to unobserved heterogeneity when this heterogeneity is constant over time. This heterogeneity can be removed from the data through differencing, for example by subtracting the group-level average over time, or by taking a first difference which will remove any time invariant components of the model.
 
 ### Negative binomial regression Model
 
@@ -162,13 +150,13 @@ To model the count data, we can also use Negative binomial regression. It is a g
 
 Zero-inflated models have been developed to cope with zero-inflated outcome data with over-dispersion (negative binomial) or without (Poisson distribution). In this project, zero-inflated negative binomial regression is applied on the dataset.
 
-A zero-inflated (ZI) model assumes that the zero observations have two different origins: "structural" and "sampling". The sampling zeros are due to the usual negative binomial distribution, which assumes that those zero observations happened by chance. Zero-inflated models assume that some zeros are observed due to some specific structure in the data. [[https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3238139/]] 
+A zero-inflated (ZI) model assumes that the zero observations have two different origins: "structural" and "sampling". The sampling zeros are due to the usual negative binomial distribution, which assumes that those zero observations happened by chance. Zero-inflated models assume that some zeros are observed due to some specific structure in the data (Hu et al 2011) 
 
 For example, in the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they were cured; these are the structural zeros since they cannot exhibit the reform of the healthcare. Others participants have zero number of visit because they purchased more medicines because of the healthcare reform and it changed their behavior. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts.
 
 ## Hurdle Models
 
-In contrast to ZI models, a hurdle model assumes that all zero data are from one "structural" source. The positive (i.e., non-zero) data have "sampling" origin, following either truncated Poisson or truncated negative-binomial distribution[[https://www.sciencedirect.com/science/article/abs/pii/0304407686900023]]. The hurdle model has been popular in the health literature, in part because it can be given a structural interpretation that seems to agree well with the intuition of a dual decision structure of the demand process.
+In contrast to ZI models, a hurdle model assumes that all zero data are from one "structural" source. The positive (i.e., non-zero) data have "sampling" origin, following either truncated Poisson or truncated negative-binomial distribution (Mullahy 1986). The hurdle model has been popular in the health literature, in part because it can be given a structural interpretation that seems to agree well with the intuition of a dual decision structure of the demand process.
 
 For example, consider a study of of the original paper. It is also reasonable to assume that it is most likely that healthy people will zero number of doctor visit and people who feel uncomfortable or have not finish the treatment will have non-zero number of doctor visits in a year. Hence the zero observations can come from only one "structural" source, the patients. If a subject is considered a patient., they do not have the "ability" to score zero number of doctor visits in a whole year and will always have a positive number in a hurdle model with either truncated Poisson or truncated negative binomial distributions.
 
@@ -200,10 +188,10 @@ For $f_2$, we have
 
 We first reproduce table 1 to generate the summary statistics for the variables of the analysis. One can have the following observations
 
-- The average number of doctor visits per quarter declined from 2.66 to 2.35 between 1996 and 1998.
-- The decline of the number of doctor visit between 1995 and 1996 is 1%. The increase between 1998 and 1999 is 2%. Therefore, the large drop (7.8%) between 1997 and 1998 in the number of visits clearly coincides with the timing of the reform.
-- The increase of the number of doctor visit between 1998 and 1999 also supports the behavior hypothesis. It is because that the 1997 reform enjoyed only a short lifespan. The partial repeal of the 1997 reform was one of the first items on the political agenda of the new government selected in 1998, and a new law lowered the co-payments by between DM 1 and DM 3, effective January 1, 1999.
-- The proportion of people reporting good health from 56 to 60% while the proportion reporting bad health decrease from 14 to 13%. This can be the partial reason supporting the idea that the 1997 reform did not worsen the general health status.
+* The average number of doctor visits per quarter declined from 2.66 to 2.35 between 1996 and 1998.
+* The decline of the number of doctor visit between 1995 and 1996 is 1%. The increase between 1998 and 1999 is 2%. Therefore, the large drop (7.8%) between 1997 and 1998 in the number of visits clearly coincides with the timing of the reform.
+* The increase of the number of doctor visit between 1998 and 1999 also supports the behavior hypothesis. It is because that the 1997 reform enjoyed only a short lifespan. The partial repeal of the 1997 reform was one of the first items on the political agenda of the new government selected in 1998, and a new law lowered the co-payments by between DM 1 and DM 3, effective January 1, 1999.
+* The proportion of people reporting good health from 56 to 60% while the proportion reporting bad health decrease from 14 to 13%. This can be the partial reason supporting the idea that the 1997 reform did not worsen the general health status.
 
 
 ```{r message=FALSE, echo = FALSE}
@@ -276,9 +264,33 @@ As an expansion of the author's work, we tried to visualize the distribution of 
 
 ![Density Histogram of the numbers of doctor visits per year](out/hist.png){width=50%}
 
-As another expansion and alternative to the Hurdle models in the original paper, we applied a zero-inflated negative binomial model (ZINB) on the data. Based on Table 3, ZINB outperformed basic models (POisson and Negative binomial models) but fitted slightly worse than Hurdle Negative binomial model. It supports the idea that Hurdle assumption aligns better to the data. In other words, we tends to believe that all zero data are from one "structural" source.
+As another expansion and alternative to the Hurdle models in the original paper, we applied a zero-inflated negative binomial model (ZINB) on the data. Based on Table 3, ZINB outperformed basic models (Poisson and Negative binomial models) but fitted slightly worse than Hurdle Negative binomial model. It supports the idea that Hurdle assumption aligns better to the data. In other words, we tends to believe that all zero data are from one "structural" source.
 
-The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (https://doi.org/10.1016/S0140-6736(17)31280-1) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strengthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are 1) mandatory universal coverage, 2) introduction of a uniform contribution rate, a central reallocation pool  and resource allocation to sickness funds according to a morbidity-based risk structure compensation scheme, 3) choice of tariffs in statutory health insurance, while the 2011 Acts are more focused on supplementary premiums and reimbursement for new pharmaceutical products. It should be noted that to evaluate the effect of both reforms, in addition to variables we used in previous analysis, we might want to incorporate more economic variables related to economic growth, business cycles, considering the 2008 recession and 2010s European Sovereign Debt Crisis.
+The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (Busse et al 2017) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strengthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are
+
+* mandatory universal coverage
+* introduction of a uniform contribution rate, a central reallocation pool  and resource allocation to sickness funds according to a morbidity-based risk structure compensation scheme
+* choice of tariffs in statutory health insurance
+
+The 2011 Acts are more focused on supplementary premiums and reimbursement for new pharmaceutical products. It should be noted that to evaluate the effect of both reforms, in addition to variables we used in previous analysis, we might want to incorporate more economic variables related to economic growth, business cycles, considering the 2008 recession and 2010s European Sovereign Debt Crisis.
+
+\pagebreak
+
+# Bibliography
+Busse, Reinhard, Miriam Blümel, Franz Knieps, and Till Bärnighausen. “Statutory Health Insurance in Germany: A Health System Shaped by 135 Years of Solidarity, Self-Governance, and Competition.” _The Lancet_ 390, no. 10097 (2017): 882–97. https://doi.org/10.1016/s0140-6736(17)31280-1. <br/>
+
+Hu, Mei-Chen, Martina Pavlicova, and Edward V. Nunes. “Zero-Inflated and Hurdle Models of Count Data with Extra Zeros: Examples from an HIV-Risk Reduction Intervention Trial.” _The American Journal of Drug and Alcohol Abuse_ 37, no. 5 (2011): 367–75. https://doi.org/10.3109/00952990.2011.597280. <br/>
+
+Mullahy, John. “Specification and Testing of Some Modified Count Data Models.” _Journal of Econometrics_ 33, no. 3 (1986): 341–65. https://doi.org/10.1016/0304-4076(86)90002-3. <br/>
+
+Winkelmann, Rainer. “Health Care Reform and the Number of Doctor Visits—an Econometric Analysis.” _Journal of Applied Econometrics_ 19, no. 4 (2004): 455–72.<br/> https://doi.org/10.1002/jae.764. 
+
+Wooldridge, Jeffrey M. _Econometric Analysis of Cross Section and Panel Data_. 2nd ed. Cambridge, MA: MIT, 2011. <br/>
+
+Zeileis, Achim, Christian Kleiber, and Simon Jackman. “Regression Models for Count Data in R .” Accessed January 10, 2022. https://cran.r-project.org/web/packages/pscl/vignettes/countreg.pdf. <br/>
+
+
+
 
 \pagebreak
 
