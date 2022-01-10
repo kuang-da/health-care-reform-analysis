@@ -6,7 +6,7 @@ output:
   pdf_document:
     latex_engine: xelatex
     extra_dependencies: ["float"]
-mainfont: Georgia
+# mainfont: Georgia
 fontsize: 12 pt
 ---
 
@@ -264,6 +264,13 @@ kable(table5_df, booktabs = T) %>%
   kable_styling(position = "center") %>%
   kable_styling(latex_options = "HOLD_position")
 ```
+
+
+We also tried to reproduce the finite mixture model analysis. However, the original paper did not provide clear description about how the author divide the population. Here we developed our own strategy for separation and got the same conclusion as the author. We rank all the ids based on the sum of the number of doctor visits in survey from 1995 to 1999. Two-thirds of the population is the low-user group with a mean number of quarterly visits of 0.997, and the one-third belongs to a high-user group with a mean number of 4.839 visits per quarter. The reform effect of the two groups are as follows.
+
+- Lower-user group ($p=0.663$, $\mu=0.997$): -8.573883
+- Higher-user group ($p=0.337$, $\mu=4.839$): -6.185429
+
 
 # Discussion
 
