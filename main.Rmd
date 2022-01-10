@@ -6,6 +6,7 @@ output:
   pdf_document:
     latex_engine: xelatex
     extra_dependencies: ["float"]
+mainfont: Georgia
 fontsize: 12 pt
 ---
 
