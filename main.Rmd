@@ -34,7 +34,7 @@ knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 
 Our final project based on the paper which evaluates the German health care reform of 1997 (Winkelmann 2004). The individual number of doctor visits is the outcome measure. The data set is from German Socio-Economic Panel for the years 1995-1999, 32837 observations are collected.
 
-As the final project for STAT 520 Applied Econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. We will implement five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model, and evaluate them by log-likelihood, AIC and BIC. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that XXX. Our conclusions are consistent with the authors of the original paper.
+As the final project for STAT 520 Applied Econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. We will implement five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model, and evaluate them by log-likelihood, Akaike (AIC) and Bayesian (BIC) Information Criterion. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that XXX. Our conclusions are consistent with the authors of the original paper.
 
 Besides following the analysis in the original paper, we also generate some visualization to describe the data distributions and demonstrate the fitness of the models. The topics we learned in STAT 520 (Ordinary least square, Heteroscedasticity, Two-stage least squares) give us a solid foundation to understand the advanced topics and models such as Generalized linear models, Zero-inflated models, and Hurdle models in the paper.
 
@@ -79,6 +79,33 @@ There is no direct health status in the GSOEP. We have the following three sets 
 The budget constraint is determined by income and prices. The main price variables are the opportunity costs of a visit to a doctor which, in turn, depend on education level and employment status. 
 
 Several of the variables affect more than one aspect at a time. Age, for instance, matters for health, opportunity cost (through the effect of experience on earnings) as well as potentially preferences. Similarly, education is an important factor in determining the optimal investment in health capital. While all those interactions are worth further investigations, it is not the goal of this paper to analyze these various transmission channels -- the focus lies on the year dummies, whereas the other variables serve as controls for their potential effects on the changes in visits over time.
+
+# Explorative Analysis of Data
+![Density Histogram of the numbers of doctor visits per year](out/hist.png){width=100%}
+![Histogram of the numbers of doctor visits in 1996](out/Hist96.png){width=49%}
+![Histogram of the numbers of doctor visits in 1996](out/Hist98.png){width=49%}
+
+![Bivariate Display](out/age96.png){width=49%}
+![Bivariate Display](out/age98.png){width=49%}
+![Bivariate Display](out/male96.png){width=49%}
+![Bivariate Display](out/male98.png){width=49%}
+![Bivariate Display](out/marry96.png){width=49%}
+![Bivariate Display](out/marry98.png){width=49%}
+
+
+![Bivariate Display](out/hsize96.png){width=49%}
+![Bivariate Display](out/hsize98.png){width=49%}
+
+![Bivariate Display](out/sport96.png){width=49%}
+![Bivariate Display](out/sport98.png){width=49%}
+![Bivariate Display](out/heath96.png){width=49%}
+![Bivariate Display](out/heath98.png){width=49%}
+![Bivariate Display](out/inc96.png){width=49%}
+![Bivariate Display](out/inc98.png){width=49%}
+
+
+From the histograms above, we can observe that there are a large amount of $0$ in the data, and overall the number of 0 increases from 1996 to 1998. Most notably, we can see a decrease in frequency for number of visits between 1 to 13.
+
 
 # Econometric Models for consideration
 
@@ -153,13 +180,19 @@ Zero-inflated models have been developed to cope with zero-inflated outcome data
 
 A zero-inflated (ZI) model assumes that the zero observations have two different origins: "structural" and "sampling". The sampling zeros are due to the usual negative binomial distribution, which assumes that those zero observations happened by chance. Zero-inflated models assume that some zeros are observed due to some specific structure in the data (Hu et al 2011) 
 
-For example, in the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they were cured; these are the structural zeros since they cannot exhibit the reform of the healthcare. Others participants have zero number of visit because they purchased more medicines because of the healthcare reform and it changed their behavior. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts.
+Formally speaking, the zero-inflated density function is a mix of a point mass at zero and a count distribution.
+$$f_{zi}(y ; x, z, \beta, \gamma)=f_{0}(0 ; z, \gamma) I_{\{0\}}(y)+\left(1-f_{0}(0 ; z, \gamma)\right) f_{\text {count }}(y ; x, \beta)$$
+with $I(\cdot)$ as the indicator function, inflated probability of observing a zero as $\pi = f_0(0;z;\gamma)$,  unobserved probability $\pi$ of belonging to the point mass component modelled by a binomial GLM $\pi = g^{-1}(z^T\gamma)$ (Zeileis et al)
+
+For the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they were cured; these are the structural zeros since they cannot exhibit the reform of the healthcare. Others participants have zero number of visit because they purchased more medicines because of the healthcare reform and it changed their behavior. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts. Consider the issues with excesssive zeros, we want to 
+
+
 
 ## Hurdle Models
 
 In contrast to ZI models, a hurdle model assumes that all zero data are from one "structural" source. The positive (i.e., non-zero) data have "sampling" origin, following either truncated Poisson or truncated negative-binomial distribution (Mullahy 1986). The hurdle model has been popular in the health literature, in part because it can be given a structural interpretation that seems to agree well with the intuition of a dual decision structure of the demand process.
 
-For example, consider a study of of the original paper. It is also reasonable to assume that it is most likely that healthy people will zero number of doctor visit and people who feel uncomfortable or have not finish the treatment will have non-zero number of doctor visits in a year. Hence the zero observations can come from only one "structural" source, the patients. If a subject is considered a patient., they do not have the "ability" to score zero number of doctor visits in a whole year and will always have a positive number in a hurdle model with either truncated Poisson or truncated negative binomial distributions.
+For the study discussed in the original paper. It is  reasonable to assume that healthy people might have zero number of doctor visit and people who start to feel ill or have not finish the treatment will have non-zero number of doctor visits in a year. Hence, the zero observations can come from only one structural source -- the patients. If a subject is considered a patient, they would not have zero number of doctor visits in a whole year and would always have a positive number of visit in a hurdle model, with either truncated Poisson or truncated negative binomial distributions.
 
 Define $d_i = 1$ if a person does not see a doctor in the period and $d_i = 0$ if he/she sees a doctor, s.t. $d_i = 1 - \mathrm{min}(1,y)$, the probability function of the hurdle model is 
 
@@ -215,11 +248,11 @@ kable(read.csv("out/table-1.csv", row.names=1, check.names=FALSE),
 
 To fit and describe the number of doctor visit as the count data, we first applied Poisson regression while considering the random and fixed effects. The log-likelihood of the models are as follows.
 
-- The pooled model: -86566.18.
-- The random effect model: -70176.72.
-- The fixed effect model: -42738.86.
+* The pooled model: -86566.18.
+* The random effect model: -70176.72.
+* The fixed effect model: -42738.86.
 
-The estimations of coefficients and stander errors for the basic Poisson model, with and without individual specific effects, are displayed in Table II. 
+The estimates of coefficients and standard errors for the basic Poisson model, with and without individual specific effects, are displayed in Table II. 
 
 ```{r message=FALSE, echo = FALSE}
 opts <- options(knitr.kable.NA = "")
@@ -230,12 +263,12 @@ kable(read.csv("out/table-2.csv", row.names=1, check.names=FALSE),
   kable_styling(latex_options = "HOLD_position")
 ```
 
-One can make the following observations from Table II
+We can make the following observations from Table II
 
-- Men have less doctor visits than women.
-- The expected number of doctor visits is u-shaped in age because \verb|age| is negative.
-- The health indicators (\verb|Good health| and \verb|Bad health|) have the largest effect among all variables.
-- There is a statistically significant decline in the expected number of doctor visits between 1996 and 1998 in all three model specifications.
+* Men have less doctor visits than women.
+* The expected number of doctor visits is u-shaped in age because \verb|age| is negative.
+* The health indicators (\verb|Good health| and \verb|Bad health|) have the largest effect among all variables.
+* There is a statistically significant decline in the expected number of doctor visits between 1996 and 1998 in all three model specifications.
 
 ## Table 3
 
@@ -264,13 +297,6 @@ kable(table5_df, booktabs = T) %>%
   kable_styling(position = "center") %>%
   kable_styling(latex_options = "HOLD_position")
 ```
-
-
-We also tried to reproduce the finite mixture model analysis. However, the original paper did not provide clear description about how the author divide the population. Here we developed our own strategy for separation and got the same conclusion as the author. We rank all the ids based on the sum of the number of doctor visits in survey from 1995 to 1999. Two-thirds of the population is the low-user group with a mean number of quarterly visits of 0.997, and the one-third belongs to a high-user group with a mean number of 4.839 visits per quarter. The reform effect of the two groups are as follows.
-
-- Lower-user group ($p=0.663$, $\mu=0.997$): -8.573883
-- Higher-user group ($p=0.337$, $\mu=4.839$): -6.185429
-
 
 # Discussion
 

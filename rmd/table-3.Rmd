@@ -56,7 +56,6 @@ print(paste0("Log Likelihod:", logLik(model_fit_negbin)))
 ```
 
 ### ZINB Regression Model
-It should be noted that if there are
 ```{r}
 model_zeroinf_negbin = zeroinfl(formula = doctco~age+age2+factor(male)+educ+factor(married)+hsize+ factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+ loginc+factor(year)+ factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "negbin")
 
