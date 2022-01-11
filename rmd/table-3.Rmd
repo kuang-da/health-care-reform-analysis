@@ -113,7 +113,7 @@ summary(hurdle_negbin_visitonly)
 ### Hurdle Probit Possion Log Normal Model
 
 ```{r}
-hurdle_probit_poisson_lognormal = hurdle(
+hurdle_probit_poisson_lognormal = pscl:: hurdle(
   doctco~age+age2+factor(male)+educ+factor(married)+hsize+factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+loginc+factor(year)+factor(emp)+factor(winter)+factor(spring)+factor(fall), data = data_df, dist = "poisson", zero.dist = "binomial", link = "probit")
 summary(hurdle_probit_poisson_lognormal)
 print(paste0("AIC:", AIC(hurdle_probit_poisson_lognormal)))
@@ -133,15 +133,11 @@ doc_vist_df <- data_df %>%
   group_by(id) %>%
   summarise(n.visit=sum(doctco), n=n()) %>% 
   arrange(n.visit)
-
 n_id <- dim(doc_vist_df)[1]
-
 group1_df <- doc_vist_df %>%
   slice_head(n=ceiling(n_id/3 * 2)) 
-
 group2_df <- doc_vist_df %>%
   slice_tail(n=ceiling(n_id/3)) 
-
 print(paste0("mu1:", sum(group1_df$n.visit) / sum(group1_df$n)))
 print(paste0("mu2:", sum(group2_df$n.visit) / sum(group2_df$n)))
 ```
@@ -150,20 +146,16 @@ print(paste0("mu2:", sum(group2_df$n.visit) / sum(group2_df$n)))
 is_in_list <- function(x, y){
   x %in% y
 }
-
 mask <- sapply(data_df$id, is_in_list, group1_df$id)
 group1_data_df <- data_df[mask, ]
-
 mask <- sapply(data_df$id, is_in_list, group2_df$id)
 group2_data_df <- data_df[mask, ]
-
 model_fit_negbin1 <- MASS::glm.nb(
   doctco~age+age2+factor(male)+educ+factor(married)+hsize+
     factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
     loginc+factor(year)+
     factor(emp)+factor(winter)+factor(spring)+factor(fall), 
   data = group1_data_df)
-
 model_fit_negbin2 <- MASS::glm.nb(
   doctco~age+age2+factor(male)+educ+factor(married)+hsize+
     factor(sport)+factor(goodh)+factor(badh)+factor(sozh)+
@@ -185,14 +177,12 @@ Another attempt to divide the population
 group1_df <- data_df %>% 
   arrange(doctco) %>%
   slice_head(n=ceiling(32837/3 * 2))
-
 sum(group1_df$doctco) / ceiling(32837/3 * 2)
 ```
 ```{r}
 group2_df <- data_df %>% 
   arrange(doctco) %>%
   slice_tail(n=ceiling(32837/3))
-
 sum(group2_df$doctco) / ceiling(32837/3)
 ```
 ### Relative position Negative Binomial Model

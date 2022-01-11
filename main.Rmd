@@ -22,7 +22,6 @@ library(pscl)
 library(knitr)
 library(kableExtra)
 library(gridExtra)
-library(hurdlr)
 library(quantreg)
 library(corrplot)
 
@@ -34,7 +33,7 @@ knitr::opts_chunk$set(fig.pos = "!H", out.extra = "")
 
 Our final project based on the paper which evaluates the German health care reform of 1997 (Winkelmann 2004). The individual number of doctor visits is the outcome measure. The data set is from German Socio-Economic Panel for the years 1995-1999, 32837 observations are collected.
 
-As the final project for STAT 520 Applied Econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. We will implement five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model, and evaluate them by log-likelihood, Akaike (AIC) and Bayesian (BIC) Information Criterion. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that XXX. Our conclusions are consistent with the authors of the original paper.
+As the final project for STAT 520 Applied Econometrics, we decided to reproduce the work in table 1, 2, 3 and part of table 5 as the pedagogical exercises. We will implement five different models including (1) Poisson regression model, (2) negative binomial regression model, (3) Zero-inflated negative binomial regression model, (4) Hurdle negative binomial model, and (5) Hurdle probit poisson log normal model, and evaluate them by log-likelihood, Akaike (AIC) and Bayesian (BIC) Information Criterion. Among all the models, Hurdle negative binomial model demonstrates the best fitness to the data set. Based on the analysis, we found out that the 1997 reform is effective and it affected different groups differently. Our conclusions are consistent with the authors of the original paper.
 
 Besides following the analysis in the original paper, we also generate some visualization to describe the data distributions and demonstrate the fitness of the models. The topics we learned in STAT 520 (Ordinary least square, Heteroscedasticity, Two-stage least squares) give us a solid foundation to understand the advanced topics and models such as Generalized linear models, Zero-inflated models, and Hurdle models in the paper.
 
@@ -48,7 +47,7 @@ An increased co-payment has a direct fiscal effect of reducing the proportion of
 
 The analysis of this paper focuses on the disincentivizing effect on prescription drug use by tracking the number of doctor visits by a person during a given time. In addition to  the unavailability of direct information on precription drug use, a rationale for this approach is that the demand for prescription drugs and the demand for doctor visits are closely related, if not complementary to each otehr. The implemented policy increased the out-of-pocket expenses for prescription drugs, and the patient might try to persuade the doctor to prescribe in larger size in an appointment or reduce their drug use -- in either case we can see a reduction in doctor visits. Though some other effects might affect the number of visits -- one might still see a doctor for diagnosis or advice on non-prescription drugs, the number of such visits would not be affected by the increased co-payment as a result of reform. Thus, an analysis of patient visits could help us get some insights into the effectiveness and success of the 1997 Healthcare reform.
 
-In this report, we will first describe the dataset and how to organize them as the systematic components, introduce econometric models like [TBD]. After fitting the model to the dataset, we will analyze and discuss the results.
+In this report, we will first describe the dataset and how to organize them as the systematic components, introduce econometric models like Poisson Regression Model,Negative binomial Regression Model,Zero-Inflation Negative Bionomial, Hurdle Negative Binomial Model Regression Model, Two components Negative Binomial Model. After fitting the model to the dataset, we will analyze and discuss the results.
 
 # Data
 
@@ -184,9 +183,7 @@ Formally speaking, the zero-inflated density function is a mix of a point mass a
 $$f_{zi}(y ; x, z, \beta, \gamma)=f_{0}(0 ; z, \gamma) I_{\{0\}}(y)+\left(1-f_{0}(0 ; z, \gamma)\right) f_{\text {count }}(y ; x, \beta)$$
 with $I(\cdot)$ as the indicator function, inflated probability of observing a zero as $\pi = f_0(0;z;\gamma)$,  unobserved probability $\pi$ of belonging to the point mass component modelled by a binomial GLM $\pi = g^{-1}(z^T\gamma)$ (Zeileis et al)
 
-For the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they were cured; these are the structural zeros since they cannot exhibit the reform of the healthcare. Others participants have zero number of visit because they purchased more medicines because of the healthcare reform and it changed their behavior. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts. Consider the issues with excesssive zeros, we want to 
-
-
+For the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they do not need to and such decision was not affected by the reform. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts. Consider the issues with excesssive zeros displayed in the graph above, Zero-inflated negative binomial model can be good candidate in this case.
 
 ## Hurdle Models
 
@@ -297,14 +294,12 @@ kable(table5_df, booktabs = T) %>%
   kable_styling(position = "center") %>%
   kable_styling(latex_options = "HOLD_position")
 ```
+We also tried to reproduce the finite mixture model analysis. However, the original paper did not provide clear description about how the author divide the population. Here we developed our own strategy for separation and got the same conclusion as the author. We rank all the ids based on the sum of the number of doctor visits in survey from 1995 to 1999. Two-thirds of the population is the low-user group with a mean number of quarterly visits of 0.997, and the one-third belongs to a high-user group with a mean number of 4.839 visits per quarter. The reform effect of the two groups are as follows.
+
+* Lower-user group ($p=0.663$, $\mu=0.997$): -8.573883
+* Higher-user group ($p=0.337$, $\mu=4.839$): -6.185429
 
 # Discussion
-
-As an expansion of the author's work, we tried to visualize the distribution of the number of the visits of doctors per year with a box plot and violin plot (Figure 1). But the outliers make it difficult to tell the differences of the median of numbers of visits among the years. The density histogram (Figure 2) of the numbers of doctor visits is also generated. We can observe that year 1998 has a slightly more zeros than other years. But any of the above visualizations are significant enough to be used as a evidence showing the effect of 1997 reform, which makes the analysis conducted in the original paper even more important. This visualization exercise help us realize that for the panel data with short time series and many observations. Regression is a more powerful tool to intercept the data than plots.
-
-![Box plot and violin plot of the numbers of doctor visits per year](out/box_violin.png){width=75%}
-
-![Density Histogram of the numbers of doctor visits per year](out/hist.png){width=50%}
 
 As another expansion and alternative to the Hurdle models in the original paper, we applied a zero-inflated negative binomial model (ZINB) on the data. Based on Table 3, ZINB outperformed basic models (Poisson and Negative binomial models) but fitted slightly worse than Hurdle Negative binomial model. It supports the idea that Hurdle assumption aligns better to the data. In other words, we tends to believe that all zero data are from one "structural" source.
 
@@ -339,18 +334,18 @@ Zeileis, Achim, Christian Kleiber, and Simon Jackman. “Regression Models for C
 # Appendix
 
 ## The calculation of table 1
-```{r, child="rmd/table-1.Rmd", eval = FALSE}
+```{r, child="rmd/table-1.Rmd", eval = TRUE}
 ```
 ## The calculation of table 2
-```{r, child="rmd/table-2.Rmd", eval = FALSE}
+```{r, child="rmd/table-2.Rmd", eval = TRUE}
 ```
 ## The calculation of table 3
-```{r, child="rmd/table-3.Rmd", eval = FALSE}
+```{r, child="rmd/table-3.Rmd", eval = TRUE}
 ```
 ## The calculation of table 5
-```{r, child="rmd/table-5.Rmd", eval = FALSE}
+```{r, child="rmd/table-5.Rmd", eval = TRUE}
 ```
 
 ## Box, violin, and histogram plots
-```{r, child="rmd/distribution-plots.Rmd", eval = FALSE}
+```{r, child="rmd/distribution-plots.Rmd", eval = TRUE}
 ```
