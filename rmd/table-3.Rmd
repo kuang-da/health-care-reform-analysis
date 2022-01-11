@@ -1,7 +1,7 @@
 ```{r}
 model_name_vec <- c("Poisson", "Negative Binomial", 
                     "Zero-inflated Negative Binomial", 
-                    "Hurdel Negative Binomial Model", 
+                    "Hurdle Negative Binomial Model", 
                     "Hurdle Probit Poisson Log Normal Model")
 loglikelihood_vec <- c()
 aic_vec <- c()

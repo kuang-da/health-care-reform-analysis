@@ -1,12 +1,12 @@
 ---
-title: "STAT 520 Project"
+title: "STAT 520 Fall 2021 Project"
 subtitle: "Replication Study of _Health Care Reform and the Number of Doctor Visits - An Econometric Analysis_"
 author: Da Kuang, Zhanqi Wang
 output: 
   pdf_document:
     latex_engine: xelatex
     extra_dependencies: ["float"]
-# mainfont: Georgia
+mainfont: Georgia
 fontsize: 12 pt
 ---
 
@@ -39,7 +39,7 @@ Besides following the analysis in the original paper, we also generate some visu
 
 # Introduction and Economic Problem of Interst
 
-As one of the OECD (The Organization for Economic Co-operation and Development) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes (1) expanding technological and expenditure possibilities in the healthcare services, (2) the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know (1) whether the reform of 1997 is successful and effective and (2) how the effect of reform differs among different groups of the population.  
+As one of the Organization for Economic Co-operation and Development (OECD) countries, Germany has a large publicly funded health sector taking a substantial portion of total GDP. A possible explanation for the increase in healthcare spending includes (1) expanding technological and expenditure possibilities in the healthcare services, (2) the surge in demand from the aging population, and incentive structures in the public health sector not promoting the efficient use of resources. One of the significant reforms on the German healthcare system was the reform of 1997, in which the co-payments for prescription drugs were raised by 200%, and the reimbursements of physicians by state insurance were capped. To evaluate the effect of the healthcare reform of 1997, we want to know (1) whether the reform of 1997 is successful and effective and (2) how the effect of reform differs among different groups of the population.  
 
 Some background information needs to be elaborated on before we dig into the analysis. The general aim of this reform is to limit healthcare expenditure and its growth rate. The change in co-payments (for prescription) drugs is the most eminent element of the 1997 reform, with measures like an extended exclusion list of drugs not covered at all by social insurance, price ceilings related to the availability of generics, and a binding overall annual budget for drugs and doctor service. 
 
@@ -103,7 +103,7 @@ Several of the variables affect more than one aspect at a time. Age, for instanc
 ![Bivariate Display](out/inc98.png){width=49%}
 
 
-From the histograms above, we can observe that there are a large amount of $0$ in the data, and overall the number of 0 increases from 1996 to 1998. Most notably, we can see a decrease in frequency for number of visits between 1 to 13.
+From the histograms above, we can observe that there are a large amount of $0$ in the data, and overall the number of 0 increases from 1996 to 1998. Most notably, we can see a decrease in frequency for number of visits between 1 to 13. Such decrease was across groups with different socioeconomical conditions, and it was more apparent on those who were healthy (based on self-reported health conditions and sport active level)
 
 
 # Econometric Models for consideration
@@ -180,8 +180,7 @@ Zero-inflated models have been developed to cope with zero-inflated outcome data
 A zero-inflated (ZI) model assumes that the zero observations have two different origins: "structural" and "sampling". The sampling zeros are due to the usual negative binomial distribution, which assumes that those zero observations happened by chance. Zero-inflated models assume that some zeros are observed due to some specific structure in the data (Hu et al 2011) 
 
 Formally speaking, the zero-inflated density function is a mix of a point mass at zero and a count distribution.
-$$f_{zi}(y ; x, z, \beta, \gamma)=f_{0}(0 ; z, \gamma) I_{\{0\}}(y)+\left(1-f_{0}(0 ; z, \gamma)\right) f_{\text {count }}(y ; x, \beta)$$
-with $I(\cdot)$ as the indicator function, inflated probability of observing a zero as $\pi = f_0(0;z;\gamma)$,  unobserved probability $\pi$ of belonging to the point mass component modelled by a binomial GLM $\pi = g^{-1}(z^T\gamma)$ (Zeileis et al)
+$$f_{zi}(y ; x, z, \beta, \gamma)=f_{0}(0 ; z, \gamma) I_{\{0\}}(y)+\left(1-f_{0}(0 ; z, \gamma)\right) f_{\text {count }}(y ; x, \beta)$$ with $I(\cdot)$ as the indicator function, inflated probability of observing a zero as $\pi = f_0(0;z;\gamma)$,  unobserved probability $\pi$ of belonging to the point mass component modelled by a binomial GLM $\pi = g^{-1}(z^T\gamma)$ (Zeileis et al)
 
 For the problem of the original paper, the number of the doctor visits is the outcome, some participants may visit zero in certain year because they do not need to and such decision was not affected by the reform. To this end, the number of doctor visit is assumed to be on a negative binomial distribution that includes both zero (the "sampling zeros") and non-zero counts. Consider the issues with excesssive zeros displayed in the graph above, Zero-inflated negative binomial model can be good candidate in this case.
 
@@ -284,7 +283,7 @@ The relative changes in expected doctor visits from 1996 to 1998 for each models
 ```{r message=FALSE, echo = FALSE}
 table5_df <- tibble(Models=c("Poisson", "Negative Binomial", 
                     "Zero-inflated Negative Binomial", 
-                    "Hurdel Negative Binomial Model"),
+                    "Hurdle Negative Binomial Model"),
            "Delta % (96, 98)"=c("-10.060%", "-8.890%", "-6.321%", "-3.482%"))
 
 
@@ -301,7 +300,9 @@ We also tried to reproduce the finite mixture model analysis. However, the origi
 
 # Discussion
 
-As another expansion and alternative to the Hurdle models in the original paper, we applied a zero-inflated negative binomial model (ZINB) on the data. Based on Table 3, ZINB outperformed basic models (Poisson and Negative binomial models) but fitted slightly worse than Hurdle Negative binomial model. It supports the idea that Hurdle assumption aligns better to the data. In other words, we tends to believe that all zero data are from one "structural" source.
+As another expansion and alternative to the Hurdle models in the original paper, we applied a zero-inflated negative binomial model (ZINB) on the data. Based on Table 3, ZINB outperformed basic models (Poisson and Negative binomial models) but fitted slightly worse than Hurdle Negative binomial model. It supports the idea that Hurdle assumption aligns better to the data. In other words, we tends to believe that all zero data are from one "structural" source. 
+
+Overall, from Table 5, we can conclude that the reform of 1997 is effective in terms of reducing number of doctor visit. Evaluating the results from Zero-Inflation Negative Binomial vs. Negative Bionomial and the result from two-component negative binomial, we can observe that there are effect are unevenly distributed -- the left-margin/less frequent users have stronger response to the reform. A possible explnation of this uneven effects is that the higher-users/more frequent users has a consistent and stronger demand for doctor visits, given their potentially unfavorable health status.
 
 The index models used in this research can be applied to study the effect of other medical healthcare events. From 1990 - 2015, multiple attempts were made to improve the solidarity-based system through competition to further improve economic efficiency of the healthcare system and promote technological advancement. (Busse et al 2017) If policy objective is on the effect of promoting efficient and responsible use of healthcare services, we might apply the same analysis to the Act to Strengthen Competition in Statutory Health Insurance in 2007 and the Statutory Health Insurance Care Structures Act, given that the primary policies of 2007 reform are
 
@@ -345,7 +346,6 @@ Zeileis, Achim, Christian Kleiber, and Simon Jackman. “Regression Models for C
 ## The calculation of table 5
 ```{r, child="rmd/table-5.Rmd", eval = TRUE}
 ```
-
 ## Box, violin, and histogram plots
 ```{r, child="rmd/distribution-plots.Rmd", eval = TRUE}
 ```
